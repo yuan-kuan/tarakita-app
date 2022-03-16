@@ -5,10 +5,12 @@ import { freeUtilsInterpretor } from './fp/free';
 import { addSop, registerStaticInterpretor} from './fp/sop';
 import { navigationInterpretor, start } from './app/router';
 import { viewMainPage } from './view';
+import { papaInterpretor } from './app/asker';
 
 // Use Free Utils
 registerStaticInterpretor(freeUtilsInterpretor);
 registerStaticInterpretor(navigationInterpretor);
+registerStaticInterpretor(papaInterpretor);
 
 start();
 
