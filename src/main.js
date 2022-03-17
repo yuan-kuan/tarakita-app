@@ -1,11 +1,10 @@
-import App from './App.svelte';
-import Sample from './Sample.svelte';
+import App from 'view/App.svelte';
 
-import { freeUtilsInterpretor } from './fp/free'; 
-import { addSop, registerStaticInterpretor} from './fp/sop';
-import { navigationInterpretor, start } from './app/router';
-import { viewMainPage } from './view';
-import { papaInterpretor } from './app/asker';
+import { freeUtilsInterpretor } from 'fp/free'; 
+import { addSop, registerStaticInterpretor} from 'fp/sop';
+import { navigationInterpretor, start } from 'app/router';
+import { papaInterpretor } from 'app/asker';
+import { viewMainPage } from 'view/view';
 
 // Use Free Utils
 registerStaticInterpretor(freeUtilsInterpretor);

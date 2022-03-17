@@ -3,10 +3,10 @@ import Future from 'fluture';
 import page from 'page';
 import { Path } from 'path-parser';
 
-import * as free from '../fp/free';
-import { addSop } from '../fp/sop';
-import { goToAskerPage } from '../app/asker';
-import { goToHomePage } from '../app/home';
+import * as free from 'fp/free';
+import { addSop } from 'fp/sop';
+import { goToAskerPage } from 'app/asker';
+import { goToHomePage } from 'app/home';
 
 const Navigation = daggy.taggedSum('Navigation', {
   Show: ['path', 'params'],

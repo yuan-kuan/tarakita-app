@@ -1,12 +1,12 @@
-import * as free from './fp/free';
-import * as ref from './fp/ref';
-import { addSop } from './fp/sop';
+import * as free from 'fp/free';
+import * as ref from 'fp/ref';
+import { addSop } from 'fp/sop';
 
 import {
   primaryView,
   modalView,
   closeModal
-} from './App.svelte';
+} from 'view/App.svelte';
 
 // Void -> Free SetRef
 const closeModalSop = () => ref.setRef(modalView, '');

@@ -1,4 +1,4 @@
-import { createArrayRef, createRef } from './fp/ref';
+import { createArrayRef, createRef } from 'fp/ref';
 
 /**
  * @typedef {object} AskerStores
@@ -6,7 +6,7 @@ import { createArrayRef, createRef } from './fp/ref';
 */
 
 /**
- * @type Nav
+ * @type AskerStores
  */
 export const AskerStores = {
   performParse: createRef(),

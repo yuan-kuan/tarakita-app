@@ -1,5 +1,5 @@
 <script>
-  import { AskerStores } from '../stores.js';
+  import { AskerStores } from 'app/stores.js';
   const { performParse } = AskerStores;
 
   const fileChanged = (event) => {

@@ -1,5 +1,5 @@
 <script context="module">
-  import { createRef } from './fp/ref';
+  import { createRef } from 'fp/ref';
   import Modal from './Modal.svelte';
 
   export const primaryView = createRef(null);

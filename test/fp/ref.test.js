@@ -1,9 +1,9 @@
 import { promise, resolve } from 'fluture';
 
-import * as free from '../../src/fp/free';
-import * as ref from '../../src/fp/ref';
-import * as sop from '../../src/fp/sop';
-import {dispatch} from '../../src/fp/interpretor';
+import * as free from 'fp/free';
+import * as ref from 'fp/ref';
+import * as sop from 'fp/sop';
+import {dispatch} from 'fp/interpretor';
 
 const interpret = (freeMonad) => promise(
   freeMonad.foldMap(dispatch([

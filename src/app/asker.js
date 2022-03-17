@@ -3,15 +3,15 @@ import daggy from 'daggy';
 import { Future, resolve } from 'fluture';
 import * as papa from 'papaparse';
 
-import * as free from '../fp/free';
-import { setRef } from '../fp/ref';
-import { addSop } from '../fp/sop';
-import { viewMainPage} from '../view';
+import * as free from 'fp/free';
+import { setRef } from 'fp/ref';
+import { addSop } from 'fp/sop';
+import { viewMainPage} from 'view/view';
 
-import * as router from '../app/router';
-import { AskerStores } from '../stores';
+import * as router from 'app/router';
+import { AskerStores } from 'app/stores';
 
-import Asker from '../views/Asker.svelte';
+import Asker from 'view/Asker.svelte';
 
 const Papa = daggy.taggedSum('Papa', {
   Parse: ['file']
