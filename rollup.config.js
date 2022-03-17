@@ -66,7 +66,7 @@ export default {
 		resolve({
 			browser: true,
 			dedupe: ['svelte'],
-			preferBuiltins: false
+      preferBuiltins: false,
 		}),
 		commonjs(),
 
@@ -82,7 +82,7 @@ export default {
 
 		// If we're building for production (npm run build
 		// instead of npm run dev), minify
-		production && terser()
+		production && terser({ compress: { evaluate: false } })
 	],
 	watch: {
 		clearScreen: false

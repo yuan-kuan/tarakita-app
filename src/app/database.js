@@ -139,7 +139,7 @@ const setupDatabaseInterpretor = (memoryPouchdb) => {
   if (memoryPouchdb) {
     pouchdb = memoryPouchdb;
   } else {
-    pouchdb = new PouchDB('b4-storage');
+    pouchdb = new PouchDB('tka-storage');
   }
 
   return [Database, databaseToFuture(pouchdb)];
