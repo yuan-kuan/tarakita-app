@@ -45,6 +45,7 @@ export default {
         { find: 'fp', replacement: __dirname + '/src/fp' },
         { find: 'view', replacement: __dirname + '/src/view' },
         { find: 'app', replacement: __dirname + '/src/app' },
+        { find: 'test', replacement: __dirname + '/src/test' },
       ]
     }),
 		svelte({
