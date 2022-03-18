@@ -10,6 +10,8 @@ const L = {
 
 const prefixVenue = (s) => `q_${s}`;
 
+const normaliseVenueName = R.compose(R.toLower, R.replace(/[ .>-]/g, '_'))
+
 /**
 * convert id to a parent id, which is ready to be postfix with new order
 * e.g. q_venue.01 --> q_venue>01
@@ -36,7 +38,7 @@ const incrementOrder =
     R.join('.'),
   );
 
-const generateVenueKey = prefixVenue;
+const generateVenueKey = R.compose(prefixVenue, normaliseVenueName);
 
 const generateFirstKey = R.curry((lens, treeState) =>
   R.pipe(

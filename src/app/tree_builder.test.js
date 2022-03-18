@@ -1,12 +1,13 @@
 import * as R from 'ramda';
 import * as free from 'fp/free'
-import {createTestHelper} from 'test/utils';
 import {addVenue, addArea, addTopic, addQuestion} from './tree_builder';
 
-const testHelper = createTestHelper(true, true);
-let interpret;
-beforeEach(() => {
-  interpret = testHelper.setup();
+test('lowercase, space greater dash and dot all become underscore', () => {
+  const result= addVenue('Venue spAce.dOt>greAter-dAsh', {});
+  
+  expect(result).toMatchObject({
+    'q_venue_space_dot_greater_dash': 'Venue spAce.dOt>greAter-dAsh'
+  });
 });
 
 // Tree is built in assumption that the order of insertion is in order of the full
@@ -31,7 +32,6 @@ beforeEach(() => {
 //       Question 2
 //       Question 3
 //       Question 4
-
 test('Add root to empty state will create the first root', async () => {
   let state = {};
   const result= addVenue('venue', state);
