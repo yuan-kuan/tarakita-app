@@ -1,17 +1,111 @@
 import * as R from 'ramda';
+import { tapLog } from './utils';
+
+const L = {
+  latestVenue: R.lensProp('_latestVenue'),
+  latestArea: R.lensProp('_latestArea'),
+  latestTopic: R.lensProp('_latestTopic'),
+  latestQuestion: R.lensProp('_latestQuestion'),
+};
 
 const prefixVenue = (s) => `q_${s}`;
 
+/**
+* convert id to a parent id, which is ready to be postfix with new order
+* e.g. q_venue.01 --> q_venue>01
+* e.g. q_venue>02.03 --> q_venue>02>03
+*
+* @param {string} id
+* @returns {string}
+*/
+const convertToParentId = (id) => id.replace('.', '>');
+
+const intTo0padded = (n) => n.toString().padStart(2, '0'); 
+
+const insertFirstOrder = (s) => `${s}.${intTo0padded(1)}`;
+
+/**
+* @param {string} s
+*/
+const incrementString = R.compose(intTo0padded, R.inc, parseInt)
+
+const incrementOrder =
+  R.pipe(
+    R.split('.'),
+    R.over(R.lensIndex(1), incrementString),
+    R.join('.'),
+  );
+
 const generateVenueKey = prefixVenue;
 
-const addPairToMap = R.curry((m, pair) => m.set(R.nth(0, pair), R.nth(1, pair)));
-
-const addVenue = R.curry((venue, treeState) =>
-  addPairToMap(treeState, R.pair(generateVenueKey(venue), venue))
+const generateFirstKey = R.curry((lens, treeState) =>
+  R.pipe(
+    R.view(lens),
+    convertToParentId,
+    insertFirstOrder 
+  )(treeState)
 );
 
-const addArea = R.curry((area, treeState) => treeState);
-const addTopic = R.curry((topic, treeState) => treeState);
-const addQuestion = R.curry((question, treeState) => treeState);
+const generateNextKey = R.curry((lens, treeState) =>
+  R.pipe(
+    R.view(lens),
+    incrementOrder,
+  )(treeState)
+);
+
+const generateKeyBaseOnState = (currentLens, parentLens, treeState) =>
+  R.ifElse(
+    R.pipe(R.view(currentLens), R.isNil),
+    generateFirstKey(parentLens),
+    generateNextKey(currentLens),
+  )(treeState);
+  
+const generateAreaKey = (treeState) =>
+  generateKeyBaseOnState(L.latestArea, L.latestVenue, treeState);  
+
+const generateTopicKey = (treeState) =>
+  generateKeyBaseOnState(L.latestTopic, L.latestArea, treeState);  
+
+const generateQuestionKey = (treeState) =>
+  generateKeyBaseOnState(L.latestQuestion, L.latestTopic, treeState);  
+
+const addVenue = R.curry((venue, treeState) =>
+  R.pipe(
+    R.set(R.lensProp(generateVenueKey(venue)), venue),
+    R.set(L.latestVenue, generateVenueKey(venue)),
+  )(treeState)
+);
+
+const addArea = R.curry((area, treeState) => {
+  const areaKey = generateAreaKey(treeState);
+
+  return R.pipe(
+    // @ts-ignore areaKey is (any) => never. ???
+    R.set(R.lensProp(areaKey), area),
+    R.set(L.latestArea, areaKey),
+    R.set(L.latestTopic, null),
+    R.set(L.latestQuestion, null)
+  )(treeState)
+});
+
+const addTopic = R.curry((topic, treeState) => {
+  const topicKey = generateTopicKey(treeState);
+
+  return R.pipe(
+    // @ts-ignore areaKey is (any) => never. ???
+    R.set(R.lensProp(topicKey), topic),
+    R.set(L.latestTopic, topicKey),
+    R.set(L.latestQuestion, null)
+  )(treeState)
+});
+
+const addQuestion = R.curry((question, treeState) => {
+  const questionKey = generateQuestionKey(treeState);
+  return R.pipe(
+    // @ts-ignore areaKey is (any) => never. ???
+    R.set(R.lensProp(questionKey), question),
+    R.set(L.latestQuestion, questionKey),
+  )(treeState)
+});
 
 export {addVenue, addArea, addTopic, addQuestion}
