@@ -1,4 +1,6 @@
+import * as free from 'fp/free'
 import {createTestHelper} from 'test/utils';
+import {addVenue, addArea, addTopic, addQuestion} from './tree_builder';
 
 const testHelper = createTestHelper(true, true);
 let interpret;
@@ -29,10 +31,9 @@ beforeEach(() => {
 //       Question 3
 //       Question 4
 
-test('Add root to empty state will create the first root', async () => {
-  const fm = addVenue('venue', new Map());
+test.only('Add root to empty state will create the first root', async () => {
+  const result= addVenue('venue', new Map());
   
-  const result = interpret(fm);
   expect(result).toEqual(new Map([
     ['q_venue', 'venue']
   ]));
