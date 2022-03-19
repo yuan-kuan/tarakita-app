@@ -17,6 +17,16 @@ const trimToParentId = R.pipe(
   R.replace(/>(?!.*>)/, '.')
 );
 
+const intTo0padded = (n) => n.toString().padStart(2, '0'); 
+const incrementString = R.compose(intTo0padded, R.inc, parseInt)
+
+const incrementId =
+  R.pipe(
+    R.split('.'),
+    R.over(R.lensIndex(1), incrementString),
+    R.join('.'),
+  );
+
 const makeFindChildrenOption = (id) =>
   R.pipe(
     R.set(L.startKey, `${id}.`),
@@ -28,6 +38,19 @@ const makeFindRootQuery = () =>
   R.pipe(
     R.set(L.typeSelector, 'venue'),
   )({});
+
+const getNextSibling = (id) =>
+  free.of(id)
+    .map(incrementId)
+    .chain(db.get)
+
+const hasNextSibling = (id) =>
+  free.of(id)
+    .chain(getNextSibling)
+    .call(free.bichain(
+      R.always(free.of(false)),
+      R.always(free.of(true)),
+    ))
 
 const findParent = (id) =>
   free.of(id)
@@ -44,4 +67,4 @@ const findRoots = () =>
   free.of(makeFindRootQuery())
     .chain(db.find);
 
-export {findRoots, findChildren, findParent};
+export {findRoots, findChildren, findParent, hasNextSibling, getNextSibling };

@@ -4,7 +4,7 @@ import * as free from 'fp/free';
 import {createTestHelper} from 'test/utils';
 
 import {addVenue, addArea, addTopic, addQuestion, storeState} from './tree_builder';
-import {findRoots, findChildren, findParent} from './tree';
+import {findRoots, findChildren, findParent, hasNextSibling, getNextSibling} from './tree';
 
 const testHelper = createTestHelper(true);
 
@@ -34,7 +34,7 @@ beforeEach(async () => {
   await interpret(storeState(state));
 });
 
-test.only('listing all venues', async () => {
+test('listing all venues', async () => {
   const fm = findRoots();
   const result = await interpret(fm);
 
@@ -45,7 +45,7 @@ test.only('listing all venues', async () => {
   });
 });
 
-test.only('going in from venue, show areas for it', async () => {
+test('going in from venue, show areas for it', async () => {
   const fm = findChildren('q_venue');
   const result = await interpret(fm);
 
@@ -60,7 +60,7 @@ test.only('going in from venue, show areas for it', async () => {
   });
 });
 
-test.only('going in from area 1, show topics for it', async () => {
+test('going in from area 1, show topics for it', async () => {
   const fm = findChildren('q_venue.01');
   const result = await interpret(fm);
 
@@ -79,7 +79,7 @@ test.only('going in from area 1, show topics for it', async () => {
   });
 });
 
-test.only('going in from area 2, show topics for it', async () => {
+test('going in from area 2, show topics for it', async () => {
   const fm = findChildren('q_venue.02');
   const result = await interpret(fm);
 
@@ -90,7 +90,7 @@ test.only('going in from area 2, show topics for it', async () => {
   });
 });
 
-test.only('going in from topic 1, show answer for it', async () => {
+test('going in from topic 1, show answer for it', async () => {
   const fm = findChildren('q_venue>01.01');
   const result = await interpret(fm);
 
@@ -109,7 +109,7 @@ test.only('going in from topic 1, show answer for it', async () => {
   });
 });
 
-test.only('going in from topic 2, show answer for it', async () => {
+test('going in from topic 2, show answer for it', async () => {
   const fm = findChildren('q_venue>01.02');
   const result = await interpret(fm);
 
@@ -124,7 +124,7 @@ test.only('going in from topic 2, show answer for it', async () => {
   });
 });
 
-test.only('get the venue from area', async () => {
+test('get the venue from area', async () => {
   const fm = findParent('q_venue.02');
   const result = await interpret(fm);
 
@@ -134,7 +134,7 @@ test.only('get the venue from area', async () => {
   });
 });
 
-test.only('get the area from topic', async () => {
+test('get the area from topic', async () => {
   const fm = findParent('q_venue>02.01');
   const result = await interpret(fm);
 
@@ -144,7 +144,7 @@ test.only('get the area from topic', async () => {
   });
 });
 
-test.only('get the topic from question', async () => {
+test('get the topic from question', async () => {
   const fm = findParent('q_venue>01>03.02');
   const result = await interpret(fm);
 
@@ -154,14 +154,26 @@ test.only('get the topic from question', async () => {
 });
 });
 
-test('g1o to next question', async () => {
+test('has next question', async () => {
+  const fm = hasNextSibling('q_venue>01>01.01');
+  const result = await interpret(fm);
 
+  expect(result).toBeTruthy();
 });
 
-test('cannot go to next question for the last one', async () => {
+test('get next qustion', async () => {
+  const fm = getNextSibling('q_venue>01>01.01');
+  const result = await interpret(fm);
 
+  expect(result).toMatchObject({
+    _id: 'q_venue>01>01.02',
+    value: 'question 2' 
+  });
 });
 
-test('', async () => {
+test('does not have next question', async () => {
+  const fm = hasNextSibling('q_venue>01>01.03');
+  const result = await interpret(fm);
 
+  expect(result).toBeFalsy();
 });
