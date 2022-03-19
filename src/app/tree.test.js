@@ -4,7 +4,7 @@ import * as free from 'fp/free';
 import {createTestHelper} from 'test/utils';
 
 import {addVenue, addArea, addTopic, addQuestion, storeState} from './tree_builder';
-import {findRoots, findChildren, findParent, hasNextSibling, getNextSibling} from './tree';
+import {findRoots, findChildren, findParent, hasNextSibling, getNextSibling, typeOf} from './tree';
 
 const testHelper = createTestHelper(true);
 
@@ -177,3 +177,16 @@ test('does not have next question', async () => {
 
   expect(result).toBeFalsy();
 });
+
+test('recognize the type of id', () => {
+  const v = typeOf('q_venue');
+  const a = typeOf('q_venue-02');
+  const t = typeOf('q_venue+02-03');
+  const q = typeOf('q_venue+02+03-04');
+
+  expect(v).toBe('venue');
+  expect(a).toBe('area');
+  expect(t).toBe('topic');
+  expect(q).toBe('question');
+});
+
