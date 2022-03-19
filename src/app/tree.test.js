@@ -4,7 +4,7 @@ import * as free from 'fp/free';
 import {createTestHelper} from 'test/utils';
 
 import {addVenue, addArea, addTopic, addQuestion, storeState} from './tree_builder';
-import {findRoots, findChildren } from './tree';
+import {findRoots, findChildren, findParent} from './tree';
 
 const testHelper = createTestHelper(true);
 
@@ -124,15 +124,37 @@ test.only('going in from topic 2, show answer for it', async () => {
   });
 });
 
-test('get the venue from area', async () => {
+test.only('get the venue from area', async () => {
+  const fm = findParent('q_venue.02');
+  const result = await interpret(fm);
 
+  expect(result).toMatchObject({
+    _id: 'q_venue',
+    value: 'venue' 
+  });
 });
 
-test('get the area from question', async () => {
+test.only('get the area from topic', async () => {
+  const fm = findParent('q_venue>02.01');
+  const result = await interpret(fm);
 
+  expect(result).toMatchObject({
+    _id: 'q_venue.02',
+    value: 'area 2' 
+  });
 });
 
-test('go to next question', async () => {
+test.only('get the topic from question', async () => {
+  const fm = findParent('q_venue>01>03.02');
+  const result = await interpret(fm);
+
+  expect(result).toMatchObject({
+    _id: 'q_venue>01.03',
+    value: 'topic 3' 
+});
+});
+
+test('g1o to next question', async () => {
 
 });
 

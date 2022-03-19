@@ -11,6 +11,12 @@ const L = {
 
 const convertToParentId = R.replace(/[.]/, '>');
 
+const trimToParentId = R.pipe(
+  R.split(/[.]/),
+  R.head,
+  R.replace(/>(?!.*>)/, '.')
+);
+
 const makeFindChildrenOption = (id) =>
   R.pipe(
     R.set(L.startKey, `${id}.`),
@@ -22,6 +28,11 @@ const makeFindRootQuery = () =>
   R.pipe(
     R.set(L.typeSelector, 'venue'),
   )({});
+
+const findParent = (id) =>
+  free.of(id)
+    .map(trimToParentId)
+    .chain(db.get)
   
 const findChildren = (id) =>
   free.of(id)
@@ -33,4 +44,4 @@ const findRoots = () =>
   free.of(makeFindRootQuery())
     .chain(db.find);
 
-export {findRoots, findChildren};
+export {findRoots, findChildren, findParent};
