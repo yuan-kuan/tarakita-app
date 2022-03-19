@@ -9,6 +9,8 @@ const L = {
   typeSelector: R.lensPath(['selector', 'type', '$eq']),
 };
 
+const convertToParentId = R.replace(/[.]/, '>');
+
 const makeFindChildrenOption = (id) =>
   R.pipe(
     R.set(L.startKey, `${id}.`),
@@ -21,8 +23,9 @@ const makeFindRootQuery = () =>
     R.set(L.typeSelector, 'venue'),
   )({});
   
-const findChildren = (parentId) =>
-  free.of(parentId)
+const findChildren = (id) =>
+  free.of(id)
+    .map(convertToParentId)
     .map(makeFindChildrenOption)
     .chain(db.allDocs)
 

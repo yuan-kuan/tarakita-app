@@ -129,7 +129,6 @@ const determineType =
     R.test(/^q_[^.>]*$/),
     R.always('venue'),
     R.always('question'),
-    
   );  
 
 const storeState = (treeState) =>
