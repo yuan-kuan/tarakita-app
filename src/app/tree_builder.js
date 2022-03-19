@@ -1,4 +1,6 @@
 import * as R from 'ramda';
+import * as free from 'fp/free';
+import { bulkDocs } from 'app/database';
 import { tapLog } from './utils';
 
 const L = {
@@ -6,6 +8,8 @@ const L = {
   latestArea: R.lensProp('_latestArea'),
   latestTopic: R.lensProp('_latestTopic'),
   latestQuestion: R.lensProp('_latestQuestion'),
+  id: R.lensProp('_id'),
+  value: R.lensProp('value'),
 };
 
 const prefixVenue = (s) => `q_${s}`;
@@ -110,4 +114,25 @@ const addQuestion = R.curry((question, treeState) => {
   )(treeState)
 });
 
-export {addVenue, addArea, addTopic, addQuestion}
+const removeInternals =
+  R.pipe(
+    R.set(L.latestVenue, null),
+    R.set(L.latestArea, null),
+    R.set(L.latestTopic, null),
+    R.set(L.latestQuestion, null),
+    R.reject(R.isNil)
+  )
+
+const storeState = (treeState) =>
+  free.of(treeState)
+    .map(removeInternals)
+    .map(R.mapObjIndexed((v, k, obj) =>
+      R.pipe(
+        R.set(L.id, k),
+        R.set(L.value, v),
+      )({})))
+    .map(R.values)
+    .chain(bulkDocs)
+    
+
+export {addVenue, addArea, addTopic, addQuestion, storeState}
