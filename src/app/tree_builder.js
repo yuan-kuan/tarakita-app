@@ -10,6 +10,7 @@ const L = {
   latestQuestion: R.lensProp('_latestQuestion'),
   id: R.lensProp('_id'),
   value: R.lensProp('value'),
+  type: R.lensProp('type'),
 };
 
 const prefixVenue = (s) => `q_${s}`;
@@ -123,6 +124,14 @@ const removeInternals =
     R.reject(R.isNil)
   )
 
+const determineType =
+  R.ifElse(
+    R.test(/^q_[^.>]*$/),
+    R.always('venue'),
+    R.always('question'),
+    
+  );  
+
 const storeState = (treeState) =>
   free.of(treeState)
     .map(removeInternals)
@@ -130,6 +139,7 @@ const storeState = (treeState) =>
       R.pipe(
         R.set(L.id, k),
         R.set(L.value, v),
+        R.set(L.type, determineType(k)),
       )({})))
     .map(R.values)
     .chain(bulkDocs)
