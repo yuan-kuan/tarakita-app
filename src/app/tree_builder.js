@@ -13,6 +13,9 @@ const L = {
   type: R.lensProp('type'),
 };
 
+const leafDot = '-';
+const parentDot = '+';
+
 const prefixVenue = (s) => `q_${s}`;
 
 const normaliseVenueName = R.compose(R.toLower, R.replace(/[ .>-]/g, '_'))
@@ -25,11 +28,11 @@ const normaliseVenueName = R.compose(R.toLower, R.replace(/[ .>-]/g, '_'))
 * @param {string} id
 * @returns {string}
 */
-const convertToParentId = (id) => id.replace('.', '>');
+const convertToParentId = (id) => id.replace(leafDot, parentDot);
 
 const intTo0padded = (n) => n.toString().padStart(2, '0'); 
 
-const insertFirstOrder = (s) => `${s}.${intTo0padded(1)}`;
+const insertFirstOrder = (s) => `${s}${leafDot}${intTo0padded(1)}`;
 
 /**
 * @param {string} s
@@ -38,9 +41,9 @@ const incrementString = R.compose(intTo0padded, R.inc, parseInt)
 
 const incrementOrder =
   R.pipe(
-    R.split('.'),
+    R.split(leafDot),
     R.over(R.lensIndex(1), incrementString),
-    R.join('.'),
+    R.join(leafDot),
   );
 
 const generateVenueKey = R.compose(prefixVenue, normaliseVenueName);
@@ -126,7 +129,7 @@ const removeInternals =
 
 const determineType =
   R.ifElse(
-    R.test(/^q_[^.>]*$/),
+    R.test(/^q_[^-+]*$/),
     R.always('venue'),
     R.always('question'),
   );  

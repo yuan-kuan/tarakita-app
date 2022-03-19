@@ -9,12 +9,15 @@ const L = {
   typeSelector: R.lensPath(['selector', 'type', '$eq']),
 };
 
-const convertToParentId = R.replace(/[.]/, '>');
+const leafDot = '-';
+const parentDot = '+';
+
+const convertToParentId = (id) => id.replace(leafDot, parentDot);
 
 const trimToParentId = R.pipe(
-  R.split(/[.]/),
+  R.split(leafDot),
   R.head,
-  R.replace(/>(?!.*>)/, '.')
+  R.replace(/[+](?!.*[+])/, leafDot)
 );
 
 const intTo0padded = (n) => n.toString().padStart(2, '0'); 
@@ -22,15 +25,15 @@ const incrementString = R.compose(intTo0padded, R.inc, parseInt)
 
 const incrementId =
   R.pipe(
-    R.split('.'),
+    R.split(leafDot),
     R.over(R.lensIndex(1), incrementString),
-    R.join('.'),
+    R.join(leafDot),
   );
 
 const makeFindChildrenOption = (id) =>
   R.pipe(
-    R.set(L.startKey, `${id}.`),
-    R.set(L.endKey, `${id}.\ufff0`),
+    R.set(L.startKey, `${id}${leafDot}`),
+    R.set(L.endKey, `${id}${leafDot}\ufff0`),
     R.set(L.includeDoc, true)
   )({}); 
 

@@ -51,12 +51,12 @@ test('venue doc is with venue type', async () => {
 });
 
 test('quetion doc is with question type', async () => {
-  const fm = db.get('q_venue>01>01.02'); 
+  const fm = db.get('q_venue+01+01-02'); 
 
   const result = await interpret(fm);
   // Inadequate test. But checked the log to confirmed.
   expect(result).toMatchObject({
-    _id: 'q_venue>01>01.02',
+    _id: 'q_venue+01+01-02',
     value: 'question 2',
     type: 'question'
   });
