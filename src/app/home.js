@@ -29,6 +29,7 @@ const goToQuestion = (id) =>
     .chain((children) =>
       free.sequence([
         viewMainPage(OptionList),
+        router.setQuestionUrl(id),
         presentChildren(children)
       ])
     );
@@ -46,4 +47,4 @@ const goToHomePage = () => free.sequence([
   presentVenue(),
 ]);
 
-export { goToHomePage };
+export { goToHomePage, goToQuestion };
