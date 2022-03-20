@@ -5,12 +5,15 @@ import { addSop } from 'fp/sop';
 import { viewMainPage} from 'view/view';
 
 import * as router from 'app/router';
+import * as tree from 'app/tree';
 
 import Home from 'view/Home.svelte';
 
 const goToHomePage = () => free.sequence([
   viewMainPage(Home),
   router.setHomeUrl(),
+
+  tree.findRoots().map(console.log), 
 ]);
 
 export { goToHomePage };
