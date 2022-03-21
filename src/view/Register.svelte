@@ -1,12 +1,15 @@
 <script>
-import { createForm } from "svelte-forms-lib";
+  import { createForm } from "svelte-forms-lib";
+  import { UserStores } from 'app/stores';
+
+	const { performRegister } = UserStores;
 
   const { form, handleChange, handleSubmit } = createForm({
     initialValues: {
       name: "",
     },
     onSubmit: values => {
-      alert(JSON.stringify(values));
+      $performRegister(values);
     }
   });
 </script>

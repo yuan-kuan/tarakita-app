@@ -6,9 +6,11 @@ import { setRef } from 'fp/ref';
 import { addSop } from 'fp/sop';
 import { viewMainPage} from 'view/view';
 import * as router from 'app/router';
-import { randomFourCharacter, tapLog } from './utils';
+import { randomFourCharacter, tapLog } from 'app/utils';
+import { UserStores } from 'app/stores';
 
 import Register from 'view/Register.svelte';
+import { goToHomePage } from './home';
 
 const C = {
   previousUserKey: 'tka_previous_user',
@@ -54,11 +56,18 @@ const createAndSave = (userFormData) =>
     .chain(addId)
     .chain(kv.set(C.previousUserKey))
 
+const performRegister = (userFormData) =>
+  free.sequence([
+    createAndSave(userFormData),
+    goToHomePage()
+  ]);
+    
+
 const goToRegisterPage = () =>
   free.sequence([
     viewMainPage(Register),
     router.setRegisterUrl(),
-    
+    setRef(UserStores.performRegister, (userJson) => addSop(() => performRegister(userJson))) 
   ]);
 
 export {createAndSave, loadPreviousUser, hasPreviousUser, goToRegisterPage};

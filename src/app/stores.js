@@ -57,3 +57,17 @@ export const AnsweringStores = {
   hasNext: createRef(),
   goToNext: createRef()
 }
+
+/**
+ * @typedef {object} UserStores
+ * @property {object} performRegister
+ * @property {object} userName
+*/
+
+/**
+ * @type UserStores
+ */
+export const UserStores = {
+  userName: createRef(),
+  performRegister: createRef(),
+}
