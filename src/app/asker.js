@@ -10,8 +10,10 @@ import { viewMainPage} from 'view/view';
 
 import * as router from 'app/router';
 import { AskerStores } from 'app/stores';
+import * as tree_builder from 'app/tree_builder';
 
 import Asker from 'view/Asker.svelte';
+import { tapLog } from './utils';
 
 const Papa = daggy.taggedSum('Papa', {
   Parse: ['file']
@@ -24,8 +26,7 @@ const papaToFuture = (p) =>
     Parse: (file) => Future((reject, resolve) => {
       papa.parse(file, {
         complete: (result) => {
-          console.log('papa result ', result);
-          resolve(result);
+          resolve(result.data);
         }
       }); 
       return () => {};
@@ -35,11 +36,53 @@ const papaToFuture = (p) =>
 const papaInterpretor = [Papa, papaToFuture];
 const parse = (file) => free.lift(Parse(file));
 
+const L = {
+  head: R.lensIndex(0),
+  secondCol: R.lensIndex(1),
+  filename: R.lensProp('name'),
+};
+
+const basename = R.pipe(
+  R.view(L.filename),
+  R.replace(/[ ]/g, ''),
+  R.split('.'),
+  R.head
+);
+
+const performParseCSV = (file) => 
+  free.of(file)
+    .chain(parse)
+    .map(R.reject(R.pipe(R.view(L.head), R.isEmpty)))
+    // Base on each row, prepare the builder function
+    // It is a curried function which wait for a tree state
+    .map(R.map(
+      R.cond([
+        [
+          R.pipe(R.view(L.secondCol), R.equals('area')),
+          R.pipe(R.view(L.head), tree_builder.addArea)
+        ], 
+        [
+          R.pipe(R.view(L.secondCol), R.equals('Yes')),
+          R.pipe(R.view(L.head), tree_builder.addTopic)
+        ], 
+        [
+          R.pipe(R.view(L.secondCol), R.equals('')),
+          R.pipe(R.view(L.head), tree_builder.addQuestion)
+        ], 
+      ])
+    ))
+    // Use reduce to apply the list of builder function to the initial treestate
+    // building it in order of the csv question
+    .map(R.reduce(
+        (treeState, builder) => builder(treeState),
+        tree_builder.addVenue(basename(file), {}))
+    )
+    .chain(tree_builder.storeState);
 
 const goToAskerPage = () => free.sequence([
   viewMainPage(Asker),
   router.setAskerUrl(),
-  setRef(AskerStores.performParse, (file) => addSop(() => parse(file)))
+  setRef(AskerStores.performParse, (file) => addSop(() => performParseCSV(file)))
 ]);
 
 export { papaInterpretor, parse, goToAskerPage };
