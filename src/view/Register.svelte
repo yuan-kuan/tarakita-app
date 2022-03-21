@@ -1,5 +1,4 @@
 <script>
-  import { createForm } from "svelte-forms-lib";
   import { UserStores } from 'app/stores';
 
   import BigCheck from 'view/BigCheck.svelte';
@@ -27,6 +26,7 @@
 	  };
 
 		$performRegister(data);
+	  console.log('submitting ', data);
 	}
 
 </script>
