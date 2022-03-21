@@ -1,6 +1,11 @@
 import * as R from 'ramda';
 import * as free from 'fp/free';
+import * as kv from 'app/kv';
 import { randomFourCharacter, tapLog } from './utils';
+
+const C = {
+  previousUserKey: 'tka_previous_user',
+};
 
 const L = {
   id: R.lensProp('_id'),
@@ -33,10 +38,13 @@ const addId = (userFormData) =>
     .map(R.set(L.id))
     .ap(free.of(userFormData))
 
-const loadPreviousUser = () => free.of({}); 
+const hasPreviousUser = () => loadPreviousUser().map(R.complement(R.isNil))
+
+const loadPreviousUser = () => kv.get(null, C.previousUserKey); 
 
 const createAndSave = (userFormData) =>
   free.of(userFormData)
     .chain(addId)
+    .chain(kv.set(C.previousUserKey))
 
-export {createAndSave, loadPreviousUser};
+export {createAndSave, loadPreviousUser, hasPreviousUser};
