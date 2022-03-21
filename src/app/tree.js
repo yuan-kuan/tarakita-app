@@ -7,6 +7,7 @@ const L = {
   endKey: R.lensProp('endkey'),
   includeDoc: R.lensProp('include_docs'),
   typeSelector: R.lensPath(['selector', 'type', '$eq']),
+  value: R.lensProp('value')
 };
 
 const leafDot = '-';
@@ -41,6 +42,11 @@ const makeFindRootQuery = () =>
   R.pipe(
     R.set(L.typeSelector, 'venue'),
   )({});
+
+const getQuestion = (id) =>
+  free.of(id)
+    .chain(db.get)
+    .map(R.view(L.value));
 
 const typeOf = (id) =>
   R.pipe(
@@ -82,4 +88,4 @@ const findRoots = () =>
   free.of(makeFindRootQuery())
     .chain(db.find);
 
-export {findRoots, findChildren, findParent, hasNextSibling, getNextSibling, typeOf};
+export {findRoots, findChildren, findParent, hasNextSibling, getNextSibling, typeOf, getQuestion};

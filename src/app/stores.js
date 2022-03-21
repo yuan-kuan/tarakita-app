@@ -41,3 +41,19 @@ export const OptionStores = {
   options: createRef([]),
   goToOptions: createRef([]),
 }
+
+/**
+ * @typedef {object} AnsweringStores
+ * @property {object} question
+ * @property {object} hasNext
+ * @property {object} goToNext
+*/
+
+/**
+ * @type AnsweringStores
+ */
+export const AnsweringStores = {
+  question: createRef(),
+  hasNext: createRef(),
+  goToNext: createRef()
+}
