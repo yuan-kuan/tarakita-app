@@ -7,6 +7,7 @@ import * as free from 'fp/free';
 import { addSop } from 'fp/sop';
 import { goToAskerPage } from 'app/asker';
 import { goToHomePage, goToQuestion } from 'app/home';
+import { goToRegisterPage } from 'app/user';
 
 const Navigation = daggy.taggedSum('Navigation', {
   Show: ['path', 'params'],
@@ -38,10 +39,12 @@ const setUrl = (path, params) => free.lift(Show(path, params));
 
 const homePath = '/';
 const askerPath = '/asker';
+const registerPath = '/register';
 const questionPath = '/q/:id';
 
 const setHomeUrl = () => setUrl(homePath);
 const setAskerUrl = () => setUrl(askerPath);
+const setRegisterUrl = () => setUrl(registerPath);
 const setQuestionUrl = (id) => setUrl(questionPath, {'id': encodeURIComponent(id)}); 
 //const setItemUrl = (itemId) => setUrl(itemPath, { 'itemId': encodeURIComponent(itemId) });
 
@@ -52,6 +55,10 @@ function start() {
 
   page(askerPath, (ctx) => {
     addSop(() => goToAskerPage());
+  });
+
+  page(registerPath, (ctx) => {
+    addSop(() => goToRegisterPage());
   });
 
   page(questionPath, (ctx) => {
@@ -70,4 +77,4 @@ function start() {
 }
 
 export const navigationInterpretor = [Navigation, nagivationToFuture];
-export { start, setHomeUrl, setAskerUrl, setQuestionUrl };
+export { start, setHomeUrl, setAskerUrl, setQuestionUrl, setRegisterUrl };

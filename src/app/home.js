@@ -6,6 +6,7 @@ import { viewMainPage} from 'view/view';
 
 import * as router from 'app/router';
 import * as tree from 'app/tree';
+import * as user from 'app/user';
 import {HomeStores, OptionStores, AnsweringStores} from 'app/stores';
 
 import Home from 'view/Home.svelte';
@@ -79,10 +80,21 @@ const presentVenue = () =>
       setRef(HomeStores.goToVenues, makeGoTos(venues))
     ]));
 
-const goToHomePage = () => free.sequence([
-  viewMainPage(Home),
-  router.setHomeUrl(),
-  presentVenue(),
-]);
+const presentHomePage = () =>
+  free.sequence([
+    viewMainPage(Home),
+    router.setHomeUrl(),
+    presentVenue(),
+  ]);
+
+const goToHomePage = () =>
+  user.hasPreviousUser()
+    .chain(
+      R.ifElse(
+        R.equals(true),
+        R.always(presentHomePage()),
+        R.always(user.goToRegisterPage())
+      )
+    );  
 
 export { goToHomePage, goToQuestion };

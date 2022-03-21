@@ -1,7 +1,14 @@
 import * as R from 'ramda';
+
 import * as free from 'fp/free';
 import * as kv from 'app/kv';
+import { setRef } from 'fp/ref';
+import { addSop } from 'fp/sop';
+import { viewMainPage} from 'view/view';
+import * as router from 'app/router';
 import { randomFourCharacter, tapLog } from './utils';
+
+import Register from 'view/Register.svelte';
 
 const C = {
   previousUserKey: 'tka_previous_user',
@@ -47,4 +54,11 @@ const createAndSave = (userFormData) =>
     .chain(addId)
     .chain(kv.set(C.previousUserKey))
 
-export {createAndSave, loadPreviousUser, hasPreviousUser};
+const goToRegisterPage = () =>
+  free.sequence([
+    viewMainPage(Register),
+    router.setRegisterUrl(),
+    
+  ]);
+
+export {createAndSave, loadPreviousUser, hasPreviousUser, goToRegisterPage};
