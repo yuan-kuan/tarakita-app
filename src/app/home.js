@@ -105,7 +105,13 @@ const presentVenue = () =>
 const syncLatestQuestion = () =>
   free.sequence([
     setRef(HomeStores.downloadingQuestion, true),
-    downloadQuestion(),
+    downloadQuestion()
+      .map(R.prop('docs_read'))
+      .chain(R.ifElse(
+        R.gt(R.__, 0),
+        R.always(presentVenue()),
+        R.always(free.of({}))))
+      ,
     setRef(HomeStores.downloadingQuestion, false),
   ]);
 

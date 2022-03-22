@@ -6,7 +6,7 @@ const dbUrl = 'http://localhost:5984/tka_1';
 
 const downloadQuestion = () =>
   db.replicateFrom(dbUrl, {filter: 'replicate/question'});
-
+ 
 const uploadDesignDoc = () => {
   const replicationFilter = {
     _id: '_design/replicate',
@@ -14,6 +14,7 @@ const uploadDesignDoc = () => {
       question: function (doc) {
         return doc.type == 'question'
           || doc.type == 'venue'
+          || doc.type == 'area'
           || doc.type == 'topic'
           || doc.type == 'subtopic';
       }.toString(),
