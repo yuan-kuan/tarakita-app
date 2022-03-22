@@ -12,7 +12,10 @@ const uploadDesignDoc = () => {
     _id: '_design/replicate',
     filters: {
       question: function (doc) {
-        return doc.type == 'question' || doc.type == 'venue';
+        return doc.type == 'question'
+          || doc.type == 'venue'
+          || doc.type == 'topic'
+          || doc.type == 'subtopic';
       }.toString(),
       answer: function (doc, req) {
         return doc.type == 'answer' && doc.user == req.user;

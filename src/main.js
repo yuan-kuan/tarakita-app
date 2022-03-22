@@ -6,7 +6,6 @@ import { setupDatabaseInterpretor } from 'app/database';
 import { setupKVInterpretor } from 'app/kv';
 import { navigationInterpretor, start } from 'app/router';
 import { papaInterpretor } from 'app/asker';
-import { demoSetup } from 'app/tree_builder';
 import { utilsInterpretor } from 'app/utils';
 import { viewMainPage } from 'view/view';
 
@@ -17,8 +16,6 @@ registerStaticInterpretor(setupDatabaseInterpretor());
 registerStaticInterpretor(navigationInterpretor);
 registerStaticInterpretor(papaInterpretor);
 registerStaticInterpretor(utilsInterpretor);
-
-addSop(() => demoSetup());
 
 start();
 

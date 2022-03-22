@@ -171,27 +171,4 @@ const storeState = (treeState) =>
     .map(R.values)
     .chain(bulkDocs)
 
-const demoSetup = () => {
-  const state = R.pipe(
-    addVenue('venue'),
-    addArea('area 1'),
-    addTopic('topic 1'),
-    addQuestion('question 1'),
-    addQuestion('question 2'),
-    addQuestion('question 3'),
-    addTopic('topic 2'),
-    addQuestion('question 2-1'),
-    addQuestion('question 2-2'),
-    addTopic('topic 3'),
-    addQuestion('question 3-1'),
-    addQuestion('question 3-2'),
-    addArea('area 2'),
-    addTopic('topic 1'),
-    addQuestion('question 1'),
-    addQuestion('question 2'),
-  )({});
-
-  return storeState(state);
-};
-
-export {addVenue, addArea, addTopic, addSubtopic, addQuestion, storeState, demoSetup}
+export {addVenue, addArea, addTopic, addSubtopic, addQuestion, storeState}

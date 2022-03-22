@@ -40,7 +40,7 @@ const parse = (file) => free.lift(Parse(file));
 
 const L = {
   head: R.lensIndex(0),
-  secondCol: R.lensIndex(1),
+  typeCol: R.lensIndex(8),
   filename: R.lensProp('name'),
 };
 
@@ -60,15 +60,19 @@ const performParseCSV = (file) =>
     .map(R.map(
       R.cond([
         [
-          R.pipe(R.view(L.secondCol), R.equals('area')),
+          R.pipe(R.view(L.typeCol), R.equals('a')),
           R.pipe(R.view(L.head), tree_builder.addArea)
         ], 
         [
-          R.pipe(R.view(L.secondCol), R.equals('Yes')),
+          R.pipe(R.view(L.typeCol), R.equals('t')),
           R.pipe(R.view(L.head), tree_builder.addTopic)
         ], 
         [
-          R.pipe(R.view(L.secondCol), R.equals('')),
+          R.pipe(R.view(L.typeCol), R.equals('s')),
+          R.pipe(R.view(L.head), tree_builder.addSubtopic)
+        ], 
+        [
+          R.pipe(R.view(L.typeCol), R.equals('')),
           R.pipe(R.view(L.head), tree_builder.addQuestion)
         ], 
       ])
