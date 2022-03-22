@@ -87,23 +87,31 @@ const generateQuestionKey = (treeState) =>
     generateKeyBaseOnState(L.latestQuestion, L.latestSubtopic),
   )(treeState);
 
-const addVenue = R.curry((venue, treeState) =>
+const generateDoc = R.curry((id, value, type) =>
   R.pipe(
-    R.set(R.lensProp(generateVenueKey(venue)), venue),
+    R.set(L.id, id),
+    R.set(L.value, value),
+    R.set(L.type, type),
+  )({}));
+
+const addVenue = R.curry((venue, treeState) => {
+  const doc = generateDoc(generateVenueKey(venue), venue, 'venue');
+
+  return R.pipe(
+    R.set(R.lensProp(R.view(L.id, doc)), doc),
     R.set(L.latestVenue, generateVenueKey(venue)),
     R.set(L.latestTopic, null),
     R.set(L.latestSubtopic, null),
     R.set(L.latestQuestion, null)
-  )(treeState)
-);
+  )(treeState);
+});
 
 const addArea = R.curry((area, treeState) => {
-  const areaKey = generateAreaKey(treeState);
+  const doc = generateDoc(generateAreaKey(treeState), area, 'area');
 
   return R.pipe(
-    // @ts-ignore areaKey is (any) => never. ???
-    R.set(R.lensProp(areaKey), area),
-    R.set(L.latestArea, areaKey),
+    R.set(R.lensProp(R.view(L.id, doc)), doc),
+    R.set(L.latestArea, R.view(L.id, doc)),
     R.set(L.latestTopic, null),
     R.set(L.latestSubtopic, null),
     R.set(L.latestQuestion, null)
@@ -111,34 +119,32 @@ const addArea = R.curry((area, treeState) => {
 });
 
 const addTopic = R.curry((topic, treeState) => {
-  const topicKey = generateTopicKey(treeState);
+  const doc = generateDoc(generateTopicKey(treeState), topic, 'topic');
 
   return R.pipe(
-    // @ts-ignore areaKey is (any) => never. ???
-    R.set(R.lensProp(topicKey), topic),
-    R.set(L.latestTopic, topicKey),
+    R.set(R.lensProp(R.view(L.id, doc)), doc),
+    R.set(L.latestTopic, R.view(L.id, doc)),
     R.set(L.latestSubtopic, null),
     R.set(L.latestQuestion, null)
   )(treeState)
 });
 
 const addSubtopic = R.curry((subtopic, treeState) => {
-  const subtopicKey = generateSubtopicKey(treeState);
+  const doc = generateDoc(generateSubtopicKey(treeState), subtopic, 'subtopic');
 
   return R.pipe(
-    // @ts-ignore areaKey is (any) => never. ???
-    R.set(R.lensProp(subtopicKey), subtopic),
-    R.set(L.latestSubtopic, subtopicKey),
+    R.set(R.lensProp(R.view(L.id, doc)), doc),
+    R.set(L.latestSubtopic, R.view(L.id, doc)),
     R.set(L.latestQuestion, null)
   )(treeState)
 });
 
 const addQuestion = R.curry((question, treeState) => {
-  const questionKey = generateQuestionKey(treeState);
+  const doc = generateDoc(generateQuestionKey(treeState), question, 'question');
+  
   return R.pipe(
-    // @ts-ignore areaKey is (any) => never. ???
-    R.set(R.lensProp(questionKey), question),
-    R.set(L.latestQuestion, questionKey),
+    R.set(R.lensProp(R.view(L.id, doc)), doc),
+    R.set(L.latestQuestion, R.view(L.id, doc)),
   )(treeState)
 });
 
@@ -162,12 +168,6 @@ const determineType =
 const storeState = (treeState) =>
   free.of(treeState)
     .map(removeInternals)
-    .map(R.mapObjIndexed((v, k, obj) =>
-      R.pipe(
-        R.set(L.id, k),
-        R.set(L.value, v),
-        R.set(L.type, determineType(k)),
-      )({})))
     .map(R.values)
     .chain(bulkDocs)
 

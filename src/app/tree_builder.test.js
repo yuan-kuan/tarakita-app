@@ -6,12 +6,12 @@ test('lowercase, space greater dash and dot all become underscore', () => {
   const result= addVenue('Venue spAce.dOt>greAter-dAsh', {});
   
   expect(result).toMatchObject({
-    'q_venue_space_dot_greater_dash': 'Venue spAce.dOt>greAter-dAsh'
+    'q_venue_space_dot_greater_dash': {'value': 'Venue spAce.dOt>greAter-dAsh'}
   });
 });
 
 // Tree is built in assumption that the order of insertion is in order of the full
-// set of questions. The CSV is expect to be layout in such a way:
+// set of questions. The CSV is expect to be layout in such a way:}
 //
 // Venue
 //   Area 1
@@ -39,7 +39,7 @@ test('Add root to empty state will create the first root', async () => {
   const result= addVenue('venue', state);
   
   expect(result).toMatchObject({
-    'q_venue': 'venue'
+    'q_venue': {'value': 'venue'}
   });
   expect(state).toStrictEqual({});
 });
@@ -51,8 +51,8 @@ test('add area to the venue', async () => {
   )({});
 
   expect(result).toMatchObject({
-    'q_venue': 'venue',
-    'q_venue-01': 'area 1',
+    'q_venue': {'value': 'venue'},
+    'q_venue-01': {'value': 'area 1'},
   });
 });
 
@@ -64,9 +64,9 @@ test('add topic to the area', async () => {
   )({});
 
   expect(result).toMatchObject({
-    'q_venue': 'venue',
-    'q_venue-01': 'area 1',
-    'q_venue+01-01': 'topic 1',
+    'q_venue': {'value': 'venue'},
+    'q_venue-01': {'value': 'area 1'},
+    'q_venue+01-01': {'value': 'topic 1'},
   });
 });
 
@@ -81,12 +81,12 @@ test('add couple of question to the topic', async () => {
   )({});
       
   expect(result).toMatchObject({
-    'q_venue': 'venue',
-    'q_venue-01': 'area 1',
-    'q_venue+01-01': 'topic 1',
-    'q_venue+01+01-01': 'question 1',
-    'q_venue+01+01-02': 'question 2',
-    'q_venue+01+01-03': 'question 3',
+    'q_venue': {'value': 'venue'},
+    'q_venue-01': {'value': 'area 1'},
+    'q_venue+01-01': {'value': 'topic 1'},
+    'q_venue+01+01-01': {'value': 'question 1'},
+    'q_venue+01+01-02': {'value': 'question 2'},
+    'q_venue+01+01-03': {'value': 'question 3'},
   });
 });
 
@@ -102,13 +102,13 @@ test('adding a topic after question will end the running topic, and sequnce the 
   )({});     
 
   expect(result).toMatchObject({
-    'q_venue': 'venue',
-    'q_venue-01': 'area 1',
-    'q_venue+01-01': 'topic 1',
-    'q_venue+01+01-01': 'question 1',
-    'q_venue+01+01-02': 'question 2',
-    'q_venue+01+01-03': 'question 3',
-    'q_venue+01-02': 'topic 2',
+    'q_venue': {'value': 'venue'},
+    'q_venue-01': {'value': 'area 1'},
+    'q_venue+01-01': {'value': 'topic 1'},
+    'q_venue+01+01-01': {'value': 'question 1'},
+    'q_venue+01+01-02': {'value': 'question 2'},
+    'q_venue+01+01-03': {'value': 'question 3'},
+    'q_venue+01-02': {'value': 'topic 2'},
   });
 });
 
@@ -126,15 +126,15 @@ test('adding questions following new topic will add under the topic', async () =
   )({});
 
   expect(result).toMatchObject({
-    'q_venue': 'venue',
-    'q_venue-01': 'area 1',
-    'q_venue+01-01': 'topic 1',
-    'q_venue+01+01-01': 'question 1',
-    'q_venue+01+01-02': 'question 2',
-    'q_venue+01+01-03': 'question 3',
-    'q_venue+01-02': 'topic 2',
-    'q_venue+01+02-01': 'question 2-1',
-    'q_venue+01+02-02': 'question 2-2',
+    'q_venue': {'value': 'venue'},
+    'q_venue-01': {'value': 'area 1'},
+    'q_venue+01-01': {'value': 'topic 1'},
+    'q_venue+01+01-01': {'value': 'question 1'},
+    'q_venue+01+01-02': {'value': 'question 2'},
+    'q_venue+01+01-03': {'value': 'question 3'},
+    'q_venue+01-02': {'value': 'topic 2'},
+    'q_venue+01+02-01': {'value': 'question 2-1'},
+    'q_venue+01+02-02': {'value': 'question 2-2'},
   });
 });
 
@@ -151,14 +151,14 @@ test('adding subtopic following topic will add new sub topic', async () => {
   )({});
 
   expect(result).toMatchObject({
-    'q_venue': 'venue',
-    'q_venue-01': 'area 1',
-    'q_venue+01-01': 'topic 1',
-    'q_venue+01+01-01': 'question 1',
-    'q_venue+01+01-02': 'question 2',
-    'q_venue+01+01-03': 'question 3',
-    'q_venue+01-02': 'topic 2',
-    'q_venue+01+02-01': 'sub topic 1',
+    'q_venue': {'value': 'venue'},
+    'q_venue-01': {'value': 'area 1'},
+    'q_venue+01-01': {'value': 'topic 1'},
+    'q_venue+01+01-01': {'value': 'question 1'},
+    'q_venue+01+01-02': {'value': 'question 2'},
+    'q_venue+01+01-03': {'value': 'question 3'},
+    'q_venue+01-02': {'value': 'topic 2'},
+    'q_venue+01+02-01': {'value': 'sub topic 1'},
   });
 });
 
@@ -177,16 +177,16 @@ test('adding question following sub topic will add new question under subtopic',
   )({});
 
   expect(result).toMatchObject({
-    'q_venue': 'venue',
-    'q_venue-01': 'area 1',
-    'q_venue+01-01': 'topic 1',
-    'q_venue+01+01-01': 'question 1',
-    'q_venue+01+01-02': 'question 2',
-    'q_venue+01+01-03': 'question 3',
-    'q_venue+01-02': 'topic 2',
-    'q_venue+01+02-01': 'sub topic 1',
-    'q_venue+01+02+01-01': 'question 1-2-1',
-    'q_venue+01+02+01-02': 'question 1-2-2',
+    'q_venue': {'value': 'venue'},
+    'q_venue-01': {'value': 'area 1'},
+    'q_venue+01-01': {'value': 'topic 1'},
+    'q_venue+01+01-01': {'value': 'question 1'},
+    'q_venue+01+01-02': {'value': 'question 2'},
+    'q_venue+01+01-03': {'value': 'question 3'},
+    'q_venue+01-02': {'value': 'topic 2'},
+    'q_venue+01+02-01': {'value': 'sub topic 1'},
+    'q_venue+01+02+01-01': {'value': 'question 1-2-1'},
+    'q_venue+01+02+01-02': {'value': 'question 1-2-2'},
   });
 });
 
@@ -207,17 +207,17 @@ test('adding subtopic following question will add new subtopic under previous to
   )({});
 
   expect(result).toMatchObject({
-    'q_venue': 'venue',
-    'q_venue-01': 'area 1',
-    'q_venue+01-01': 'topic 1',
-    'q_venue+01+01-01': 'question 1',
-    'q_venue+01+01-02': 'question 2',
-    'q_venue+01+01-03': 'question 3',
-    'q_venue+01-02': 'topic 2',
-    'q_venue+01+02-01': 'sub topic 1',
-    'q_venue+01+02+01-01': 'question 1-2-1',
-    'q_venue+01+02+01-02': 'question 1-2-2',
-    'q_venue+01+02-02': 'sub topic 2',
+    'q_venue': {'value': 'venue'},
+    'q_venue-01': {'value': 'area 1'},
+    'q_venue+01-01': {'value': 'topic 1'},
+    'q_venue+01+01-01': {'value': 'question 1'},
+    'q_venue+01+01-02': {'value': 'question 2'},
+    'q_venue+01+01-03': {'value': 'question 3'},
+    'q_venue+01-02': {'value': 'topic 2'},
+    'q_venue+01+02-01': {'value': 'sub topic 1'},
+    'q_venue+01+02+01-01': {'value': 'question 1-2-1'},
+    'q_venue+01+02+01-02': {'value': 'question 1-2-2'},
+    'q_venue+01+02-02': {'value': 'sub topic 2'},
   });
 });
 
@@ -238,18 +238,18 @@ test('adding question following sub topic will add new question under new subtop
   )({});
 
   expect(result).toMatchObject({
-    'q_venue': 'venue',
-    'q_venue-01': 'area 1',
-    'q_venue+01-01': 'topic 1',
-    'q_venue+01+01-01': 'question 1',
-    'q_venue+01+01-02': 'question 2',
-    'q_venue+01+01-03': 'question 3',
-    'q_venue+01-02': 'topic 2',
-    'q_venue+01+02-01': 'sub topic 1',
-    'q_venue+01+02+01-01': 'question 1-2-1',
-    'q_venue+01+02+01-02': 'question 1-2-2',
-    'q_venue+01+02-02': 'sub topic 2',
-    'q_venue+01+02+02-01': 'question 1-2-2-1',
+    'q_venue': {'value': 'venue'},
+    'q_venue-01': {'value': 'area 1'},
+    'q_venue+01-01': {'value': 'topic 1'},
+    'q_venue+01+01-01': {'value': 'question 1'},
+    'q_venue+01+01-02': {'value': 'question 2'},
+    'q_venue+01+01-03': {'value': 'question 3'},
+    'q_venue+01-02': {'value': 'topic 2'},
+    'q_venue+01+02-01': {'value': 'sub topic 1'},
+    'q_venue+01+02+01-01': {'value': 'question 1-2-1'},
+    'q_venue+01+02+01-02': {'value': 'question 1-2-2'},
+    'q_venue+01+02-02': {'value': 'sub topic 2'},
+    'q_venue+01+02+02-01': {'value': 'question 1-2-2-1'},
   });
 });
 
@@ -273,21 +273,21 @@ test('adding question following question under subtopic will add new topic under
   )({});
 
   expect(result).toMatchObject({
-    'q_venue': 'venue',
-    'q_venue-01': 'area 1',
-    'q_venue+01-01': 'topic 1',
-    'q_venue+01+01-01': 'question 1',
-    'q_venue+01+01-02': 'question 2',
-    'q_venue+01+01-03': 'question 3',
-    'q_venue+01-02': 'topic 2',
-    'q_venue+01+02-01': 'sub topic 1',
-    'q_venue+01+02+01-01': 'question 1-2-1',
-    'q_venue+01+02+01-02': 'question 1-2-2',
-    'q_venue+01+02-02': 'sub topic 2',
-    'q_venue+01+02+02-01': 'question 1-2-2-1',
-    'q_venue+01-03': 'topic 3',
-    'q_venue+01+03-01': 'sub topic 3-1',
-    'q_venue+01+03+01-01': 'question 3-1-1',
+    'q_venue': {'value': 'venue'},
+    'q_venue-01': {'value': 'area 1'},
+    'q_venue+01-01': {'value': 'topic 1'},
+    'q_venue+01+01-01': {'value': 'question 1'},
+    'q_venue+01+01-02': {'value': 'question 2'},
+    'q_venue+01+01-03': {'value': 'question 3'},
+    'q_venue+01-02': {'value': 'topic 2'},
+    'q_venue+01+02-01': {'value': 'sub topic 1'},
+    'q_venue+01+02+01-01': {'value': 'question 1-2-1'},
+    'q_venue+01+02+01-02': {'value': 'question 1-2-2'},
+    'q_venue+01+02-02': {'value': 'sub topic 2'},
+    'q_venue+01+02+02-01': {'value': 'question 1-2-2-1'},
+    'q_venue+01-03': {'value': 'topic 3'},
+    'q_venue+01+03-01': {'value': 'sub topic 3-1'},
+    'q_venue+01+03+01-01': {'value': 'question 3-1-1'},
   });
 });
 
@@ -306,16 +306,16 @@ test('adding area after question to end the previous area and start a new one', 
   )({});
 
   expect(result).toMatchObject({
-    'q_venue': 'venue',
-    'q_venue-01': 'area 1',
-    'q_venue+01-01': 'topic 1',
-    'q_venue+01+01-01': 'question 1',
-    'q_venue+01+01-02': 'question 2',
-    'q_venue+01+01-03': 'question 3',
-    'q_venue+01-02': 'topic 2',
-    'q_venue+01+02-01': 'question 2-1',
-    'q_venue+01+02-02': 'question 2-2',
-    'q_venue-02': 'area 2',
+    'q_venue': {'value': 'venue'},
+    'q_venue-01': {'value': 'area 1'},
+    'q_venue+01-01': {'value': 'topic 1'},
+    'q_venue+01+01-01': {'value': 'question 1'},
+    'q_venue+01+01-02': {'value': 'question 2'},
+    'q_venue+01+01-03': {'value': 'question 3'},
+    'q_venue+01-02': {'value': 'topic 2'},
+    'q_venue+01+02-01': {'value': 'question 2-1'},
+    'q_venue+01+02-02': {'value': 'question 2-2'},
+    'q_venue-02': {'value': 'area 2'},
   });
 });
 
@@ -338,20 +338,20 @@ test('adding new topic and questioni to the new area will under the new area', a
   )({});
 
   expect(result).toMatchObject({
-    'q_venue': 'venue',
-    'q_venue-01': 'area 1',
-    'q_venue+01-01': 'topic 1',
-    'q_venue+01+01-01': 'question 1',
-    'q_venue+01+01-02': 'question 2',
-    'q_venue+01+01-03': 'question 3',
-    'q_venue+01-02': 'topic 2',
-    'q_venue+01+02-01': 'question 2-1',
-    'q_venue+01+02-02': 'question 2-2',
-    'q_venue-02': 'area 2',
-    'q_venue+02-01': 'topic 1',
-    'q_venue+02+01-01': 'question 1',
-    'q_venue+02+01-02': 'question 2',
-    'q_venue+02+01-03': 'question 3',
+    'q_venue': {'value': 'venue'},
+    'q_venue-01': {'value': 'area 1'},
+    'q_venue+01-01': {'value': 'topic 1'},
+    'q_venue+01+01-01': {'value': 'question 1'},
+    'q_venue+01+01-02': {'value': 'question 2'},
+    'q_venue+01+01-03': {'value': 'question 3'},
+    'q_venue+01-02': {'value': 'topic 2'},
+    'q_venue+01+02-01': {'value': 'question 2-1'},
+    'q_venue+01+02-02': {'value': 'question 2-2'},
+    'q_venue-02': {'value': 'area 2'},
+    'q_venue+02-01': {'value': 'topic 1'},
+    'q_venue+02+01-01': {'value': 'question 1'},
+    'q_venue+02+01-02': {'value': 'question 2'},
+    'q_venue+02+01-03': {'value': 'question 3'},
   });
 });
 
@@ -407,52 +407,52 @@ test('full test single venue', async () => {
   )({});
 
   expect(result).toMatchObject({
-    'q_venue': 'venue',
-    'q_venue-01': 'area 1',
-    'q_venue+01-01': 'topic 1',
-    'q_venue+01+01-01': 'question 1',
-    'q_venue+01+01-02': 'question 2',
-    'q_venue+01+01-03': 'question 3',
-    'q_venue+01-02': 'topic 2',
-    'q_venue+01+02-01': 'question 2-1',
-    'q_venue+01+02-02': 'question 2-2',
-    'q_venue-02': 'area 2',
-    'q_venue+02-01': 'topic 1',
-    'q_venue+02+01-01': 'question 1',
-    'q_venue+02+01-02': 'question 2',
-    'q_venue+02+01-03': 'question 3',
-    'q_venue-03': 'area 3',
-    'q_venue+03-01': 'topic 1',
-    'q_venue+03+01-01': 'question 1',
-    'q_venue-04': 'area 4',
-    'q_venue+04-01': 'topic 1',
-    'q_venue+04+01-01': 'question 1',
-    'q_venue+04+01-02': 'question 2',
-    'q_venue+04+01-03': 'question 3',
-    'q_venue+04-02': 'topic 2',
-    'q_venue+04+02-01': 'question 1',
-    'q_venue+04+02-02': 'question 2',
-    'q_venue+04+02-03': 'question 3',
-    'q_venue-05': 'area 5',
-    'q_venue+05-01': 'topic 1',
-    'q_venue+05+01-01': 'question 1',
-    'q_venue-06': 'area 6',
-    'q_venue+06-01': 'topic 1',
-    'q_venue+06+01-01': 'question 1',
-    'q_venue-07': 'area 7',
-    'q_venue+07-01': 'topic 1',
-    'q_venue+07+01-01': 'question 1',
-    'q_venue-08': 'area 8',
-    'q_venue+08-01': 'topic 1',
-    'q_venue+08+01-01': 'question 1',
-    'q_venue-09': 'area 9',
-    'q_venue+09-01': 'topic 1',
-    'q_venue+09+01-01': 'question 1',
-    'q_venue-10': 'area 10',
-    'q_venue+10-01': 'topic 1',
-    'q_venue+10+01-01': 'question 1',
-    'q_venue-11': 'area 11',
-    'q_venue+11-01': 'topic 1',
-    'q_venue+11+01-01': 'question 1',
+    'q_venue': {'value': 'venue'},
+    'q_venue-01': {'value': 'area 1'},
+    'q_venue+01-01': {'value': 'topic 1'},
+    'q_venue+01+01-01': {'value': 'question 1'},
+    'q_venue+01+01-02': {'value': 'question 2'},
+    'q_venue+01+01-03': {'value': 'question 3'},
+    'q_venue+01-02': {'value': 'topic 2'},
+    'q_venue+01+02-01': {'value': 'question 2-1'},
+    'q_venue+01+02-02': {'value': 'question 2-2'},
+    'q_venue-02': {'value': 'area 2'},
+    'q_venue+02-01': {'value': 'topic 1'},
+    'q_venue+02+01-01': {'value': 'question 1'},
+    'q_venue+02+01-02': {'value': 'question 2'},
+    'q_venue+02+01-03': {'value': 'question 3'},
+    'q_venue-03': {'value': 'area 3'},
+    'q_venue+03-01': {'value': 'topic 1'},
+    'q_venue+03+01-01': {'value': 'question 1'},
+    'q_venue-04': {'value': 'area 4'},
+    'q_venue+04-01': {'value': 'topic 1'},
+    'q_venue+04+01-01': {'value': 'question 1'},
+    'q_venue+04+01-02': {'value': 'question 2'},
+    'q_venue+04+01-03': {'value': 'question 3'},
+    'q_venue+04-02': {'value': 'topic 2'},
+    'q_venue+04+02-01': {'value': 'question 1'},
+    'q_venue+04+02-02': {'value': 'question 2'},
+    'q_venue+04+02-03': {'value': 'question 3'},
+    'q_venue-05': {'value': 'area 5'},
+    'q_venue+05-01': {'value': 'topic 1'},
+    'q_venue+05+01-01': {'value': 'question 1'},
+    'q_venue-06': {'value': 'area 6'},
+    'q_venue+06-01': {'value': 'topic 1'},
+    'q_venue+06+01-01': {'value': 'question 1'},
+    'q_venue-07': {'value': 'area 7'},
+    'q_venue+07-01': {'value': 'topic 1'},
+    'q_venue+07+01-01': {'value': 'question 1'},
+    'q_venue-08': {'value': 'area 8'},
+    'q_venue+08-01': {'value': 'topic 1'},
+    'q_venue+08+01-01': {'value': 'question 1'},
+    'q_venue-09': {'value': 'area 9'},
+    'q_venue+09-01': {'value': 'topic 1'},
+    'q_venue+09+01-01': {'value': 'question 1'},
+    'q_venue-10': {'value': 'area 10'},
+    'q_venue+10-01': {'value': 'topic 1'},
+    'q_venue+10+01-01': {'value': 'question 1'},
+    'q_venue-11': {'value': 'area 11'},
+    'q_venue+11-01': {'value': 'topic 1'},
+    'q_venue+11+01-01': {'value': 'question 1'},
   });
 });
