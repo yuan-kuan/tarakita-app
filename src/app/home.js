@@ -13,6 +13,11 @@ import {HomeStores, OptionStores, AnsweringStores} from 'app/stores';
 import Home from 'view/Home.svelte';
 import OptionList from 'view/OptionList.svelte';
 import AnsweringPage from 'view/AnsweringPage.svelte';
+import { tapLog } from './utils';
+
+const L = {
+  id: R.lensProp('_id')
+};
 
 const makeGoTos = (docs) =>
     R.pipe(
@@ -49,8 +54,24 @@ const goToAnswering = (id) =>
     presentQuestion(id),
     presentNextQuestion(id)
   ]);
-    
 
+const goToFirstQuestion = (id) =>
+  free.of(id)
+    .chain(tree.findChildren)
+    .map(R.head)
+    .map(R.view(L.id))
+    .chain(goToAnswering)
+
+const goToTopic = (id) =>
+  free.of(id)
+    .chain(tree.hasSubtopic)
+    .chain(
+        R.ifElse(R.equals(true),
+        R.always(goToListing(id)),
+        R.always(goToFirstQuestion(id)),
+      )
+    );
+   
 const goToListing = (id) =>
   free.of(id)
     .chain(tree.findChildren)
@@ -64,15 +85,16 @@ const goToListing = (id) =>
 
 const goToQuestion = (id) =>
   free.of(id)
-    .map(tree.typeOf)
+    .chain(tree.typeOf)
     .chain(
-      R.ifElse(
-        R.equals('question'),
-        R.always(goToAnswering(id)),
-        R.always(goToListing(id))
-      )
-    )
-
+      R.cond([
+        [R.equals('question'), R.always(goToAnswering(id))],
+        [R.equals('subtopic'), R.always(goToFirstQuestion(id))],
+        [R.equals('topic'), R.always(goToTopic(id))],
+        [R.equals('area'), R.always(goToListing(id))],
+        [R.equals('venue'), R.always(goToListing(id))],
+      ]))
+   
 const presentVenue = () =>
   tree.findRoots()
     .chain((venues) => free.sequence([
