@@ -17,6 +17,7 @@ export const AskerStores = {
 /**
  * @typedef {object} HomeStores
  * @property {object} venues
+ * @property {object} downloadingQuestion
  * @property {object} goToVenues
 */
 
@@ -25,6 +26,7 @@ export const AskerStores = {
  */
 export const HomeStores = {
   venues: createRef([]),
+  downloadingQuestion: createRef(),
   goToVenues: createRef([]),
 }
 

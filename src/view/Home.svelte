@@ -1,7 +1,7 @@
 <script>
   import {HomeStores} from 'app/stores';
 
-  const {venues, goToVenues} = HomeStores;
+  const {venues, goToVenues, downloadingQuestion} = HomeStores;
 </script>
 
 <section class="p-8 bg-blue-300">
@@ -18,5 +18,13 @@
           on:click={$goToVenues[index]}>{venue}</button>
       </li>
     {/each}
+
+    {#if $downloadingQuestion}
+			<li>
+				<span class="px-6 w-full">
+    			Downloading new questions...
+				</span>
+  		</li>
+    {/if}
   </ul>
 </section>

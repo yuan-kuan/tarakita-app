@@ -7,6 +7,7 @@ import { viewMainPage} from 'view/view';
 import * as router from 'app/router';
 import * as tree from 'app/tree';
 import * as user from 'app/user';
+import {downloadQuestion} from 'app/sources';
 import {HomeStores, OptionStores, AnsweringStores} from 'app/stores';
 
 import Home from 'view/Home.svelte';
@@ -72,7 +73,6 @@ const goToQuestion = (id) =>
       )
     )
 
-
 const presentVenue = () =>
   tree.findRoots()
     .chain((venues) => free.sequence([
@@ -80,11 +80,19 @@ const presentVenue = () =>
       setRef(HomeStores.goToVenues, makeGoTos(venues))
     ]));
 
+const syncLatestQuestion = () =>
+  free.sequence([
+    setRef(HomeStores.downloadingQuestion, true),
+    downloadQuestion(),
+    setRef(HomeStores.downloadingQuestion, false),
+  ]);
+
 const presentHomePage = () =>
   free.sequence([
     viewMainPage(Home),
     router.setHomeUrl(),
     presentVenue(),
+    syncLatestQuestion(),
   ]);
 
 const goToHomePage = () =>

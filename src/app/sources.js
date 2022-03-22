@@ -4,7 +4,8 @@ import * as db from 'app/database';
 
 const dbUrl = 'http://localhost:5984/tka_1';
 
-const downloadQuestion = () => {};
+const downloadQuestion = () =>
+  db.replicateFrom(dbUrl, {filter: 'replicate/question'});
 
 const uploadDesignDoc = () => {
   const replicationFilter = {
