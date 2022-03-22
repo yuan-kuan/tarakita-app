@@ -1,6 +1,6 @@
 import * as R from 'ramda';
 import * as free from 'fp/free'
-import {addVenue, addArea, addTopic, addQuestion} from './tree_builder';
+import {addVenue, addArea, addTopic, addSubtopic, addQuestion} from './tree_builder';
 
 test('lowercase, space greater dash and dot all become underscore', () => {
   const result= addVenue('Venue spAce.dOt>greAter-dAsh', {});
@@ -19,10 +19,12 @@ test('lowercase, space greater dash and dot all become underscore', () => {
 //       Question 1
 //       Question 2
 //     Topic  2
-//       Question 1
-//       Question 2
-//       Question 3
-//       Question 4
+//       SubTopic 1
+  //       Question 1
+  //       Question 2
+  //     SubTopic 2
+  //       Question 1
+  //       Question 2
 //   Area 2
 //     Topic 1
 //       Question 1
@@ -133,6 +135,159 @@ test('adding questions following new topic will add under the topic', async () =
     'q_venue+01-02': 'topic 2',
     'q_venue+01+02-01': 'question 2-1',
     'q_venue+01+02-02': 'question 2-2',
+  });
+});
+
+test('adding subtopic following topic will add new sub topic', async () => {
+  const result = R.pipe(
+      addVenue('venue'),
+      addArea('area 1'),
+      addTopic('topic 1'),
+      addQuestion('question 1'),
+      addQuestion('question 2'),
+      addQuestion('question 3'),
+      addTopic('topic 2'),
+      addSubtopic('sub topic 1'),
+  )({});
+
+  expect(result).toMatchObject({
+    'q_venue': 'venue',
+    'q_venue-01': 'area 1',
+    'q_venue+01-01': 'topic 1',
+    'q_venue+01+01-01': 'question 1',
+    'q_venue+01+01-02': 'question 2',
+    'q_venue+01+01-03': 'question 3',
+    'q_venue+01-02': 'topic 2',
+    'q_venue+01+02-01': 'sub topic 1',
+  });
+});
+
+test('adding question following sub topic will add new question under subtopic', async () => {
+  const result = R.pipe(
+      addVenue('venue'),
+      addArea('area 1'),
+      addTopic('topic 1'),
+      addQuestion('question 1'),
+      addQuestion('question 2'),
+      addQuestion('question 3'),
+      addTopic('topic 2'),
+      addSubtopic('sub topic 1'),
+      addQuestion('question 1-2-1'),
+      addQuestion('question 1-2-2'),
+  )({});
+
+  expect(result).toMatchObject({
+    'q_venue': 'venue',
+    'q_venue-01': 'area 1',
+    'q_venue+01-01': 'topic 1',
+    'q_venue+01+01-01': 'question 1',
+    'q_venue+01+01-02': 'question 2',
+    'q_venue+01+01-03': 'question 3',
+    'q_venue+01-02': 'topic 2',
+    'q_venue+01+02-01': 'sub topic 1',
+    'q_venue+01+02+01-01': 'question 1-2-1',
+    'q_venue+01+02+01-02': 'question 1-2-2',
+  });
+});
+
+test('adding subtopic following question will add new subtopic under previous topic', async () => {
+
+  const result = R.pipe(
+      addVenue('venue'),
+      addArea('area 1'),
+      addTopic('topic 1'),
+      addQuestion('question 1'),
+      addQuestion('question 2'),
+      addQuestion('question 3'),
+      addTopic('topic 2'),
+      addSubtopic('sub topic 1'),
+      addQuestion('question 1-2-1'),
+      addQuestion('question 1-2-2'),
+      addSubtopic('sub topic 2'),
+  )({});
+
+  expect(result).toMatchObject({
+    'q_venue': 'venue',
+    'q_venue-01': 'area 1',
+    'q_venue+01-01': 'topic 1',
+    'q_venue+01+01-01': 'question 1',
+    'q_venue+01+01-02': 'question 2',
+    'q_venue+01+01-03': 'question 3',
+    'q_venue+01-02': 'topic 2',
+    'q_venue+01+02-01': 'sub topic 1',
+    'q_venue+01+02+01-01': 'question 1-2-1',
+    'q_venue+01+02+01-02': 'question 1-2-2',
+    'q_venue+01+02-02': 'sub topic 2',
+  });
+});
+
+test('adding question following sub topic will add new question under new subtopic', async () => {
+  const result = R.pipe(
+      addVenue('venue'),
+      addArea('area 1'),
+      addTopic('topic 1'),
+      addQuestion('question 1'),
+      addQuestion('question 2'),
+      addQuestion('question 3'),
+      addTopic('topic 2'),
+      addSubtopic('sub topic 1'),
+      addQuestion('question 1-2-1'),
+      addQuestion('question 1-2-2'),
+      addSubtopic('sub topic 2'),
+      addQuestion('question 1-2-2-1'),
+  )({});
+
+  expect(result).toMatchObject({
+    'q_venue': 'venue',
+    'q_venue-01': 'area 1',
+    'q_venue+01-01': 'topic 1',
+    'q_venue+01+01-01': 'question 1',
+    'q_venue+01+01-02': 'question 2',
+    'q_venue+01+01-03': 'question 3',
+    'q_venue+01-02': 'topic 2',
+    'q_venue+01+02-01': 'sub topic 1',
+    'q_venue+01+02+01-01': 'question 1-2-1',
+    'q_venue+01+02+01-02': 'question 1-2-2',
+    'q_venue+01+02-02': 'sub topic 2',
+    'q_venue+01+02+02-01': 'question 1-2-2-1',
+  });
+});
+
+test('adding question following question under subtopic will add new topic under previous area', async () => {
+  const result = R.pipe(
+      addVenue('venue'),
+      addArea('area 1'),
+      addTopic('topic 1'),
+      addQuestion('question 1'),
+      addQuestion('question 2'),
+      addQuestion('question 3'),
+      addTopic('topic 2'),
+      addSubtopic('sub topic 1'),
+      addQuestion('question 1-2-1'),
+      addQuestion('question 1-2-2'),
+      addSubtopic('sub topic 2'),
+      addQuestion('question 1-2-2-1'),
+      addTopic('topic 3'),
+      addSubtopic('sub topic 3-1'),
+      addQuestion('question 3-1-1'),
+  )({});
+
+  expect(result).toMatchObject({
+    'q_venue': 'venue',
+    'q_venue-01': 'area 1',
+    'q_venue+01-01': 'topic 1',
+    'q_venue+01+01-01': 'question 1',
+    'q_venue+01+01-02': 'question 2',
+    'q_venue+01+01-03': 'question 3',
+    'q_venue+01-02': 'topic 2',
+    'q_venue+01+02-01': 'sub topic 1',
+    'q_venue+01+02+01-01': 'question 1-2-1',
+    'q_venue+01+02+01-02': 'question 1-2-2',
+    'q_venue+01+02-02': 'sub topic 2',
+    'q_venue+01+02+02-01': 'question 1-2-2-1',
+    'q_venue+01-03': 'topic 3',
+    'q_venue+01+03-01': 'sub topic 3-1',
+    'q_venue+01+03+01-01': 'question 3-1-1',
   });
 });
 
