@@ -7,7 +7,8 @@ const L = {
   endKey: R.lensProp('endkey'),
   includeDoc: R.lensProp('include_docs'),
   typeSelector: R.lensPath(['selector', 'type', '$eq']),
-  value: R.lensProp('value')
+  value: R.lensProp('value'),
+  type: R.lensProp('type')
 };
 
 const leafDot = '-';
@@ -43,22 +44,22 @@ const makeFindRootQuery = () =>
     R.set(L.typeSelector, 'venue'),
   )({});
 
+const hasSubtopic = (id) =>
+  free.of(id)
+    .chain(findChildren)
+    .map(R.head)
+    .map(R.view(L.type))
+    .map(R.equals('subtopic'));
+
 const getQuestion = (id) =>
   free.of(id)
     .chain(db.get)
     .map(R.view(L.value));
 
 const typeOf = (id) =>
-  R.pipe(
-    R.split(/[+-]/),
-    R.length,
-    R.cond([
-      [R.equals(1), R.always('venue')],
-      [R.equals(2), R.always('area')],
-      [R.equals(3), R.always('topic')],
-      [R.equals(4), R.always('question')],
-    ])
-  )(id);
+  free.of(id)
+    .chain(db.get)
+    .map(R.view(L.type));
 
 const getNextSibling = (id) =>
   free.of(id)
@@ -88,4 +89,4 @@ const findRoots = () =>
   free.of(makeFindRootQuery())
     .chain(db.find);
 
-export {findRoots, findChildren, findParent, hasNextSibling, getNextSibling, typeOf, getQuestion};
+export {findRoots, findChildren, findParent, hasNextSibling, getNextSibling, typeOf, getQuestion, hasSubtopic};

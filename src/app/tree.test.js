@@ -3,8 +3,8 @@ import * as R from 'ramda';
 import * as free from 'fp/free';
 import {createTestHelper} from 'test/utils';
 
-import {addVenue, addArea, addTopic, addQuestion, storeState} from './tree_builder';
-import {findRoots, findChildren, findParent, hasNextSibling, getNextSibling, typeOf} from './tree';
+import {addVenue, addArea, addTopic, addQuestion, storeState, addSubtopic} from './tree_builder';
+import {findRoots, findChildren, findParent, hasNextSibling, getNextSibling, typeOf, hasSubtopic} from './tree';
 
 const testHelper = createTestHelper(true);
 
@@ -20,8 +20,12 @@ beforeEach(async () => {
     addQuestion('question 2'),
     addQuestion('question 3'),
     addTopic('topic 2'),
-    addQuestion('question 2-1'),
-    addQuestion('question 2-2'),
+    addSubtopic('sub topic 2-1'),
+    addQuestion('question 2-1-1'),
+    addQuestion('question 2-1-2'),
+    addSubtopic('sub topic 2-2'),
+    addQuestion('question 2-2-1'),
+    addQuestion('question 2-2-2'),
     addTopic('topic 3'),
     addQuestion('question 3-1'),
     addQuestion('question 3-2'),
@@ -109,18 +113,33 @@ test('going in from topic 1, show answer for it', async () => {
   });
 });
 
-test('going in from topic 2, show answer for it', async () => {
+test('going in from topic 3, show answer for it', async () => {
+  const fm = findChildren('q_venue+01-03');
+  const result = await interpret(fm);
+
+  expect(result).toHaveLength(2);
+  expect(result[0]).toMatchObject({
+    _id: 'q_venue+01+03-01',
+    value: 'question 3-1'
+  });
+  expect(result[1]).toMatchObject({
+    _id: 'q_venue+01+03-02',
+    value: 'question 3-2'
+  });
+});
+
+test('going in from topic 2, show subtopic for it', async () => {
   const fm = findChildren('q_venue+01-02');
   const result = await interpret(fm);
 
   expect(result).toHaveLength(2);
   expect(result[0]).toMatchObject({
     _id: 'q_venue+01+02-01',
-    value: 'question 2-1'
+    value: 'sub topic 2-1'
   });
   expect(result[1]).toMatchObject({
     _id: 'q_venue+01+02-02',
-    value: 'question 2-2'
+    value: 'sub topic 2-2'
   });
 });
 
@@ -178,15 +197,37 @@ test('does not have next question', async () => {
   expect(result).toBeFalsy();
 });
 
-test('recognize the type of id', () => {
-  const v = typeOf('q_venue');
-  const a = typeOf('q_venue-02');
-  const t = typeOf('q_venue+02-03');
-  const q = typeOf('q_venue+02+03-04');
+test('recognize the type of id', async () => {
+  const fm = free.sequence([
+    typeOf('q_venue'),
+    typeOf('q_venue-02'),
+    typeOf('q_venue+01-02'),
+    typeOf('q_venue+01+02-02'),
+    typeOf('q_venue+01+02+02-01'),
+  ]);
+
+  const [v, a, t, s, q] =  await interpret(fm);
 
   expect(v).toBe('venue');
   expect(a).toBe('area');
   expect(t).toBe('topic');
+  expect(s).toBe('subtopic');
   expect(q).toBe('question');
 });
 
+test('check does a topic has subtopics', async () => {
+  const fm = hasSubtopic('q_venue+01-02');
+  const result = await interpret(fm);
+  expect(result).toBeTruthy(); 
+});
+
+test('check does a topic not has subtopics', async () => {
+  const fm = free.sequence([
+    hasSubtopic('q_venue+01-01'),
+    hasSubtopic('q_venue+02-01'),
+  ]);
+
+  const result = await interpret(fm);
+  expect(result[0]).toBeFalsy(); 
+  expect(result[1]).toBeFalsy(); 
+});
