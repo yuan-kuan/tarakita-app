@@ -3,6 +3,7 @@ import { createArrayRef, createRef } from 'fp/ref';
 /**
  * @typedef {object} AskerStores
  * @property {object} performParse
+ * @property {object} performUpload
 */
 
 /**
@@ -10,6 +11,7 @@ import { createArrayRef, createRef } from 'fp/ref';
  */
 export const AskerStores = {
   performParse: createRef(),
+  performUpload: createRef(),
 }
 
 /**

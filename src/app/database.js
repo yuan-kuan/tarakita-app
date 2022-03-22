@@ -21,9 +21,11 @@ const Database = daggy.taggedSum('Database', {
   CleanUp: [''],
   Destroy: [''],
   Sync: ['targetUrl', 'options'],
+  ReplicateTo: ['targetUrl',' options'],
+  ReplicateFrom: ['sourceUrl',' options'],
 });
 // @ts-ignore
-const { Get, AllDocs, Put, BulkDocs, Attach, Query, CleanUp, CreateIndex, Find, Destroy, Sync } = Database;
+const { Get, AllDocs, Put, BulkDocs, Attach, Query, CleanUp, CreateIndex, Find, Destroy, Sync, ReplicateTo, ReplicateFrom } = Database;
 
 const databaseToFuture = (pouchdb) => (p) =>
   p.cata({
@@ -132,6 +134,18 @@ const databaseToFuture = (pouchdb) => (p) =>
         pouchdb.sync(targetUrl, options).then(resolve).catch(reject);
         return () => { };
       }),
+
+    ReplicateTo: (targetUrl, options) =>
+      Future((reject, resolve) => {
+        pouchdb.replicate.to(targetUrl, options).then(resolve).catch(reject);
+        return () => { };
+      }),
+
+    ReplicateFrom: (targetUrl, options) =>
+      Future((reject, resolve) => {
+        pouchdb.replicate.from(targetUrl, options).then(resolve).catch(reject);
+        return () => { };
+      }),
   });
 
 const setupDatabaseInterpretor = (memoryPouchdb) => {
@@ -157,6 +171,8 @@ const find = (options) => lift(Find(options));
 const cleanUp = () => lift(CleanUp(null));
 const destroy = () => lift(Destroy(null));
 const sync = (targetUrl, options) => lift(Sync(targetUrl, options));
+const replicateTo = (targetUrl, options) => lift(ReplicateTo(targetUrl, options));
+const replicateFrom = (targetUrl, options) => lift(ReplicateFrom(targetUrl, options));
 
 const L = { deleted: R.lensProp('_deleted') };
 
@@ -188,6 +204,8 @@ export {
   cleanUp,
   destroy,
   sync,
+  replicateTo,
+  replicateFrom,
   del,
   deleteAllDocs,
 };

@@ -14,6 +14,8 @@ import * as tree_builder from 'app/tree_builder';
 
 import Asker from 'view/Asker.svelte';
 import { tapLog } from './utils';
+import { uploadQuestion } from './sources';
+import { goToHomePage } from './home';
 
 const Papa = daggy.taggedSum('Papa', {
   Parse: ['file']
@@ -79,10 +81,16 @@ const performParseCSV = (file) =>
     )
     .chain(tree_builder.storeState);
 
+const performUpload = () => free.sequence([
+  uploadQuestion(),
+  goToHomePage(),
+]);
+
 const goToAskerPage = () => free.sequence([
   viewMainPage(Asker),
   router.setAskerUrl(),
-  setRef(AskerStores.performParse, (file) => addSop(() => performParseCSV(file)))
+  setRef(AskerStores.performParse, (file) => addSop(() => performParseCSV(file))),
+  setRef(AskerStores.performUpload, () => addSop(() => performUpload()))
 ]);
 
 export { papaInterpretor, parse, goToAskerPage };

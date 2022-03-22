@@ -1,6 +1,6 @@
 <script>
   import { AskerStores } from 'app/stores.js';
-  const { performParse } = AskerStores;
+  const { performParse, performUpload } = AskerStores;
 
   const fileChanged = (event) => {
 		let blob = event.target.files[0];
@@ -16,4 +16,7 @@
 
 <label>Question CSV</label>
 <input type="file" on:change={fileChanged} />
-}
+
+<br>
+
+<button on:click={$performUpload}>Upload question</button>
