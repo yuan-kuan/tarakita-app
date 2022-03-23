@@ -72,16 +72,23 @@ const createSubmission = (rating, comment) =>
     R.set(L.comment, comment),
   )({});
 
+const isSubmissionTheSame = R.curry((previous, next) =>{
+  const ratingSame = R.equals(R.view(L.rating, previous), R.view(L.rating, next));    
+  const commentSame = R.equals(R.view(L.comment, previous), R.view(L.comment, next));
+  return R.and(ratingSame, commentSame);
+});
+
 const submit = R.curry((questionId, submission) =>
   free.of(questionId)
     .chain(convertToAnswerId)
-    .map(tapLog('answer id'))
     .chain(db.get)
-    .map(R.mergeLeft)
-    .ap(free.of(submission))
-    .map(tapLog('end product'))
-    .chain(db.put)
-);
+    .chain(R.ifElse(
+        isSubmissionTheSame(submission),
+        R.always(free.of({})), 
+        (previous) =>
+          free.of(previous)
+            .map(R.mergeLeft(submission))
+            .chain(db.put))));
 
 const generateRatioDoc = (answered, total) =>
   R.pipe(
@@ -96,4 +103,15 @@ const ratio = (parentId) =>
     .chain(findAllAnswerUnder)
     .map((docs) => generateRatioDoc(R.length(findAnswered(docs)), R.length(docs)));
 
-export {init, createSubmission, submit, ratio}; 
+const finalResult = (venueId) =>
+  free.of(venueId)
+    .chain(findAllAnswerUnder)
+    .map(R.pluck('rating'))
+    .map(R.reduce((acc, value) => acc + value, 0))
+
+const getAnswer = (questionId) =>
+  free.of(questionId)
+    .chain(convertToAnswerId)
+    .chain(db.get)
+
+export {init, createSubmission, submit, ratio, finalResult, getAnswer}; 

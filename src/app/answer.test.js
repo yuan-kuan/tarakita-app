@@ -132,8 +132,77 @@ test('submitting all answer under a topic and subtopic will mark it complete', a
     answered: 4,
     total: 4,
   });
-
 });
 
-test('calculate a total score after a venue is fully answered', async () => {});
+test('calculate a total score after a venue is fully answered', async () => {
+  const submission = answer.createSubmission(4);
+  const fm = free.sequence([
+    answer.submit('q_venue+01+01-01', submission),
+    answer.submit('q_venue+01+01-02', submission),
+    answer.submit('q_venue+01+01-03', submission),
+    answer.submit('q_venue+01+02+01-01', submission),
+    answer.submit('q_venue+01+02+01-01', submission),
+    answer.submit('q_venue+01+02+01-02', submission),
+    answer.submit('q_venue+01+02+02-01', submission),
+    answer.submit('q_venue+01+02+02-02', submission),
+    answer.submit('q_venue+01+03-01', submission),
+    answer.submit('q_venue+01+03-02', submission),
+    answer.submit('q_venue+02+01-01', submission),
+    answer.submit('q_venue+02+01-02', submission),
+    answer.finalResult('q_venue')
+  ]).map(R.last);
+  const result = await interpret(fm);
+
+  expect(result).toBe(44)
+});
+
+test('get an unanswered answer for the question', async () => {
+  const fm = answer.getAnswer('q_venue+01+01-01');
+  const result = await interpret(fm);
+
+  expect(result).not.toHaveProperty('rating');
+});
+
+test('get an answer for the question', async () => {
+  const fm = free.sequence([
+    answer.submit('q_venue+01+01-01', answer.createSubmission(3)),
+    answer.getAnswer('q_venue+01+01-01')  
+  ]).map(R.last);
+  const result = await interpret(fm);
+
+  expect(result).toMatchObject({
+    rating: 3
+  });
+});
+
+test('change the answer for the question', async () => {
+  const fm = free.sequence([
+    answer.submit('q_venue+01+01-01', answer.createSubmission(3)),
+    answer.submit('q_venue+01+01-01', answer.createSubmission(1)),
+    answer.getAnswer('q_venue+01+01-01'), 
+  ]).map(R.last);
+  const result = await interpret(fm);
+
+  expect(result).toMatchObject({
+    rating: 1
+  });
+  expect(result._rev[0]).toBe('3');
+});
+
+test('do no push an unchanged answer', async () => {
+  const fm = free.sequence([
+    answer.submit('q_venue+01+01-01', answer.createSubmission(3)),
+    answer.submit('q_venue+01+01-01', answer.createSubmission(3)),
+    answer.submit('q_venue+01+01-01', answer.createSubmission(3)),
+    answer.submit('q_venue+01+01-01', answer.createSubmission(3)),
+    answer.getAnswer('q_venue+01+01-01')  
+  ]).map(R.last);
+  const result = await interpret(fm);
+
+  expect(result).toMatchObject({
+    rating: 3
+  });
+  expect(result._rev[0]).toBe('2');
+});
+
 test('', async () => {});
