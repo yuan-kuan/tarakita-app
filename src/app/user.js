@@ -70,4 +70,8 @@ const goToRegisterPage = () =>
     setRef(UserStores.performRegister, (userJson) => addSop(() => performRegister(userJson))) 
   ]);
 
-export {createAndSave, loadPreviousUser, hasPreviousUser, goToRegisterPage};
+const getUserId = () =>
+  loadPreviousUser()
+    .map(R.view(L.id))
+
+export {createAndSave, loadPreviousUser, hasPreviousUser, goToRegisterPage, getUserId};
