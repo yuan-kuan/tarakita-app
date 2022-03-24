@@ -9,6 +9,8 @@ const L = {
   type: R.lensProp('type'),
   rating: R.lensProp('rating'),
   comment: R.lensProp('comment'),
+  positive: R.lensProp('positive'),
+  negative: R.lensProp('negative'),
   answered: R.lensProp('answered'),
   total: R.lensProp('total'),
   startKey: R.lensProp('startkey'),
@@ -22,11 +24,19 @@ const parentDot = '+';
 const convertToParentId = (id) => id.replace(leafDot, parentDot);
 
 const convertToAnswerPrefix = R.replace(/q/, 'a');
+const convertToCommentPrefix = R.replace(/q/, 'c');
 
 const convertToAnswerId = (id) =>
   free
     .of(id)
     .map(convertToAnswerPrefix)
+    .map(R.curry((prefix, userId) => `${prefix}:${userId}`))
+    .ap(getUserId());
+
+const convertToCommentId = (id) =>
+  free
+    .of(id)
+    .map(convertToCommentPrefix)
     .map(R.curry((prefix, userId) => `${prefix}:${userId}`))
     .ap(getUserId());
 
@@ -121,4 +131,51 @@ const finalResult = (venueId) =>
 const getAnswer = (questionId) =>
   free.of(questionId).chain(convertToAnswerId).chain(db.get);
 
-export { init, createSubmission, submit, ratio, finalResult, getAnswer };
+const generateEmptyComment = (questionId) =>
+  free
+    .of(questionId)
+    .chain(convertToCommentId)
+    .map(R.set(L.id))
+    .ap(free.of({}))
+    .map(R.set(L.positive, ''))
+    .map(R.set(L.negative, ''))
+    .map(R.set(L.type, 'comment'));
+
+const getComment = (questionId) =>
+  free
+    .of(questionId)
+    .chain(convertToCommentId)
+    .chain(db.get)
+    .call(free.bichain(R.always(generateEmptyComment(questionId)), free.of));
+
+const isCommentTheSame = R.curry((pos, neg, previous) => {
+  const posSame = R.equals(R.view(L.positive, previous), pos);
+  const negSame = R.equals(R.view(L.negative, previous), neg);
+  return R.and(posSame, negSame);
+});
+
+const putComment = (questionId, pos, neg) =>
+  getComment(questionId).chain(
+    R.ifElse(isCommentTheSame(pos, neg), R.always(free.of({})), (previous) =>
+      free
+        .of(previous)
+        .map(
+          R.mergeLeft({
+            positive: pos,
+            negative: neg,
+          })
+        )
+        .chain(db.put)
+    )
+  );
+
+export {
+  init,
+  createSubmission,
+  submit,
+  ratio,
+  finalResult,
+  getAnswer,
+  getComment,
+  putComment,
+};
