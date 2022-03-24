@@ -34,7 +34,9 @@ export const HomeStores = {
  * @typedef {object} OptionStores
  * @property {object} ancestors
  * @property {object} options
+ * @property {object} currentName
  * @property {object} goToOptions
+ * @property {object} backToParent
 */
 
 /**
@@ -43,23 +45,29 @@ export const HomeStores = {
 export const OptionStores = {
   ancestors: createRef([]),
   options: createRef([]),
+  currentName: createRef(),
   goToOptions: createRef([]),
+  backToParent: createRef(),
 }
 
 /**
  * @typedef {object} AnsweringStores
+ * @property {object} ancestors
  * @property {object} question
  * @property {object} hasNext
  * @property {object} goToNext
+ * @property {object} backToParent
 */
 
 /**
  * @type AnsweringStores
  */
 export const AnsweringStores = {
+  ancestors: createRef([]),
   question: createRef(),
   hasNext: createRef(),
-  goToNext: createRef()
+  goToNext: createRef(),
+  backToParent: createRef(),
 }
 
 /**

@@ -1,7 +1,7 @@
 <script>
   import {AnsweringStores} from 'app/stores';
 
-  const {question, hasNext, goToNext} = AnsweringStores;
+  const {ancestors, question, hasNext, goToNext, backToParent} = AnsweringStores;
 </script>
 
 <section class="p-4 container">
@@ -23,15 +23,15 @@
 
 
 <section class="p-4 container">
+   	<button
+		  class="bg-blue-500 hover:bg-blue-dark text-white font-bold py-2 px-6 rounded"
+		  on:click={$backToParent}
+    	>Back </button>
   {#if $hasNext}
   	<button
 		  class="bg-blue-500 hover:bg-blue-dark text-white font-bold py-2 px-6 rounded"
 		  on:click={$goToNext}
     	>Next Question</button>
-  {:else}
-   	<button
-		  class="bg-blue-500 hover:bg-blue-dark text-white font-bold py-2 px-6 rounded"
-    	>Back </button>
   {/if}
 </section>
 

@@ -1,10 +1,12 @@
 import * as R from 'ramda';
 import * as free from 'fp/free';
 import * as db from 'app/database';
+import { tapLog } from './utils';
 
 const L = {
   startKey: R.lensProp('startkey'), 
   endKey: R.lensProp('endkey'),
+  keys: R.lensProp('keys'),
   includeDoc: R.lensProp('include_docs'),
   typeSelector: R.lensPath(['selector', 'type', '$eq']),
   value: R.lensProp('value'),
@@ -42,6 +44,12 @@ const makeFindChildrenOption = (id) =>
 const makeFindRootQuery = () =>
   R.pipe(
     R.set(L.typeSelector, 'venue'),
+  )({});
+
+const makeAllDocKeysOption = (ids) =>
+   R.pipe(
+    R.set(L.keys, ids),
+    R.set(L.includeDoc, true)
   )({});
 
 const hasSubtopic = (id) =>
@@ -89,4 +97,15 @@ const findRoots = () =>
   free.of(makeFindRootQuery())
     .chain(db.find);
 
-export {findRoots, findChildren, findParent, hasNextSibling, getNextSibling, typeOf, getQuestion, hasSubtopic};
+const getAncestors = (id) =>
+  free.of(id)
+    .map(R.unfold((i) => {
+      const parentId = trimToParentId(i);
+      return i == parentId ? false : [parentId, parentId];
+    }))
+    .map(R.reverse)
+    .map(makeAllDocKeysOption)
+    .chain(db.allDocs);
+
+
+export {findRoots, findChildren, findParent, hasNextSibling, getNextSibling, typeOf, getQuestion, hasSubtopic, getAncestors};

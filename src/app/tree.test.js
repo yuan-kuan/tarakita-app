@@ -4,7 +4,7 @@ import * as free from 'fp/free';
 import {createTestHelper} from 'test/utils';
 
 import {addVenue, addArea, addTopic, addQuestion, storeState, addSubtopic} from './tree_builder';
-import {findRoots, findChildren, findParent, hasNextSibling, getNextSibling, typeOf, hasSubtopic} from './tree';
+import {findRoots, findChildren, findParent, hasNextSibling, getNextSibling, typeOf, hasSubtopic, getAncestors} from './tree';
 
 const testHelper = createTestHelper(true);
 
@@ -231,3 +231,33 @@ test('check does a topic not has subtopics', async () => {
   expect(result[0]).toBeFalsy(); 
   expect(result[1]).toBeFalsy(); 
 });
+
+test('get ancestors of different level', async () => {
+  const fm = free.sequence([
+    getAncestors('q_venue-01'),
+    getAncestors('q_venue+01-02'),
+    getAncestors('q_venue+01+02-01'),
+    getAncestors('q_venue+01+02+01-02'),
+  ]);
+
+  const result = await interpret(fm);
+  expect(result[0]).toHaveLength(1);
+  expect(result[0][0]).toMatchObject({_id: 'q_venue' });
+
+  expect(result[1]).toHaveLength(2);
+  expect(result[1][0]).toMatchObject({_id: 'q_venue' });
+  expect(result[1][1]).toMatchObject({_id: 'q_venue-01' });
+
+  expect(result[2]).toHaveLength(3);
+  expect(result[2][0]).toMatchObject({_id: 'q_venue' });
+  expect(result[2][1]).toMatchObject({_id: 'q_venue-01' });
+  expect(result[2][2]).toMatchObject({_id: 'q_venue+01-02' });
+
+  expect(result[3]).toHaveLength(4);
+  expect(result[3][0]).toMatchObject({_id: 'q_venue' });
+  expect(result[3][1]).toMatchObject({_id: 'q_venue-01' });
+  expect(result[3][2]).toMatchObject({_id: 'q_venue+01-02' });
+  expect(result[3][3]).toMatchObject({_id: 'q_venue+01+02-01' });
+});
+
+test('', async () => {});
