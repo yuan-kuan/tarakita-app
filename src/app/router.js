@@ -20,7 +20,9 @@ const nagivationToFuture = (p) =>
     Show: (path, params) =>
       Future((reject, resolve) => {
         try {
-          const newPath = new Path(path).build(params, { ignoreConstraints: true });
+          const newPath = new Path(path).build(params, {
+            ignoreConstraints: true,
+          });
 
           if (newPath != page.current) {
             // @ts-ignore wrong type definition version?
@@ -29,9 +31,13 @@ const nagivationToFuture = (p) =>
 
           resolve(newPath);
         } catch (error) {
-          reject(`Navigation error: ${error} when path is ${path} and params are ${JSON.stringify(params)}`);
+          reject(
+            `Navigation error: ${error} when path is ${path} and params are ${JSON.stringify(
+              params
+            )}`
+          );
         }
-        return () => { };
+        return () => {};
       }),
   });
 
@@ -45,7 +51,8 @@ const questionPath = '/q/:id';
 const setHomeUrl = () => setUrl(homePath);
 const setAskerUrl = () => setUrl(askerPath);
 const setRegisterUrl = () => setUrl(registerPath);
-const setQuestionUrl = (id) => setUrl(questionPath, {'id': encodeURIComponent(id)}); 
+const setQuestionUrl = (id) =>
+  setUrl(questionPath, { id: encodeURIComponent(id) });
 //const setItemUrl = (itemId) => setUrl(itemPath, { 'itemId': encodeURIComponent(itemId) });
 
 function start() {
@@ -66,9 +73,9 @@ function start() {
     addSop(() => goToQuestion(ctx.params.id));
   });
 
-//  page(itemPath, (ctx) => {
-//    addSop(() => goToItem(ctx.params.itemId));
-//  });
+  //  page(itemPath, (ctx) => {
+  //    addSop(() => goToItem(ctx.params.itemId));
+  //  });
 
   page('*', () => {
     console.error('Unknown path');

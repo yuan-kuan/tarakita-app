@@ -21,11 +21,25 @@ const Database = daggy.taggedSum('Database', {
   CleanUp: [''],
   Destroy: [''],
   Sync: ['targetUrl', 'options'],
-  ReplicateTo: ['targetUrl',' options'],
-  ReplicateFrom: ['sourceUrl',' options'],
+  ReplicateTo: ['targetUrl', ' options'],
+  ReplicateFrom: ['sourceUrl', ' options'],
 });
 // @ts-ignore
-const { Get, AllDocs, Put, BulkDocs, Attach, Query, CleanUp, CreateIndex, Find, Destroy, Sync, ReplicateTo, ReplicateFrom } = Database;
+const {
+  Get,
+  AllDocs,
+  Put,
+  BulkDocs,
+  Attach,
+  Query,
+  CleanUp,
+  CreateIndex,
+  Find,
+  Destroy,
+  Sync,
+  ReplicateTo,
+  ReplicateFrom,
+} = Database;
 
 const databaseToFuture = (pouchdb) => (p) =>
   p.cata({
@@ -35,7 +49,7 @@ const databaseToFuture = (pouchdb) => (p) =>
           ? { attachments: true, binary: true }
           : {};
         pouchdb.get(id, option).then(resolve).catch(reject);
-        return () => { };
+        return () => {};
       }),
 
     AllDocs: (options) =>
@@ -46,7 +60,7 @@ const databaseToFuture = (pouchdb) => (p) =>
             resolve(R.compose(R.pluck('doc'), R.prop('rows'))(result));
           })
           .catch(reject);
-        return () => { };
+        return () => {};
       }),
 
     Put: (doc) =>
@@ -59,17 +73,14 @@ const databaseToFuture = (pouchdb) => (p) =>
           })
           .catch(reject);
 
-        return () => { };
+        return () => {};
       }),
 
     BulkDocs: (docs) =>
       Future((reject, resolve) => {
-        pouchdb
-          .bulkDocs(docs)
-          .then(resolve)
-          .catch(reject);
+        pouchdb.bulkDocs(docs).then(resolve).catch(reject);
 
-        return () => { };
+        return () => {};
       }),
 
     Attach: (doc, filename, blob) =>
@@ -78,7 +89,7 @@ const databaseToFuture = (pouchdb) => (p) =>
           .putAttachment(doc._id, filename, doc._rev, blob, 'image/jpg')
           .then(resolve)
           .catch(reject);
-        return () => { };
+        return () => {};
       }),
 
     Query: (index, options) =>
@@ -87,15 +98,12 @@ const databaseToFuture = (pouchdb) => (p) =>
           .query(index, options)
           .then(R.compose(resolve, R.prop('rows')))
           .catch(reject);
-        return () => { };
+        return () => {};
       }),
     CreateIndex: (index) =>
       Future((reject, resolve) => {
-        pouchdb
-          .createIndex(index)
-          .then(resolve)
-          .catch(reject);
-        return () => { };
+        pouchdb.createIndex(index).then(resolve).catch(reject);
+        return () => {};
       }),
     Find: (options) =>
       Future((reject, resolve) => {
@@ -103,7 +111,7 @@ const databaseToFuture = (pouchdb) => (p) =>
           .find(options)
           .then(R.compose(resolve, R.prop('docs')))
           .catch(reject);
-        return () => { };
+        return () => {};
       }),
 
     CleanUp: (_) =>
@@ -115,7 +123,7 @@ const databaseToFuture = (pouchdb) => (p) =>
           })
           .then(resolve)
           .catch(reject);
-        return () => { };
+        return () => {};
       }),
 
     Destroy: (_) =>
@@ -126,25 +134,25 @@ const databaseToFuture = (pouchdb) => (p) =>
             resolve();
           })
           .catch(reject);
-        return () => { };
+        return () => {};
       }),
 
     Sync: (targetUrl, options) =>
       Future((reject, resolve) => {
         pouchdb.sync(targetUrl, options).then(resolve).catch(reject);
-        return () => { };
+        return () => {};
       }),
 
     ReplicateTo: (targetUrl, options) =>
       Future((reject, resolve) => {
         pouchdb.replicate.to(targetUrl, options).then(resolve).catch(reject);
-        return () => { };
+        return () => {};
       }),
 
     ReplicateFrom: (targetUrl, options) =>
       Future((reject, resolve) => {
         pouchdb.replicate.from(targetUrl, options).then(resolve).catch(reject);
-        return () => { };
+        return () => {};
       }),
   });
 
@@ -157,7 +165,7 @@ const setupDatabaseInterpretor = (memoryPouchdb) => {
   }
 
   return [Database, databaseToFuture(pouchdb)];
-}
+};
 
 const get = (id) => lift(Get(id, false));
 const getWithAttachment = (id) => lift(Get(id, true));
@@ -171,24 +179,19 @@ const find = (options) => lift(Find(options));
 const cleanUp = () => lift(CleanUp(null));
 const destroy = () => lift(Destroy(null));
 const sync = (targetUrl, options) => lift(Sync(targetUrl, options));
-const replicateTo = (targetUrl, options) => lift(ReplicateTo(targetUrl, options));
-const replicateFrom = (targetUrl, options) => lift(ReplicateFrom(targetUrl, options));
+const replicateTo = (targetUrl, options) =>
+  lift(ReplicateTo(targetUrl, options));
+const replicateFrom = (targetUrl, options) =>
+  lift(ReplicateFrom(targetUrl, options));
 
 const L = { deleted: R.lensProp('_deleted') };
 
 const markDeleted = (doc) => R.set(L.deleted, true, doc);
-const markAllDeleted = (docs) =>
-  R.map(R.set(L.deleted, true), docs);
+const markAllDeleted = (docs) => R.map(R.set(L.deleted, true), docs);
 
-const del = (id) =>
-  get(id)
-    .map(markDeleted)
-    .chain(put);
+const del = (id) => get(id).map(markDeleted).chain(put);
 
-const deleteAllDocs = (docs) =>
-  of(docs)
-    .map(markAllDeleted)
-    .chain(bulkDocs);
+const deleteAllDocs = (docs) => of(docs).map(markAllDeleted).chain(bulkDocs);
 
 export {
   setupDatabaseInterpretor,

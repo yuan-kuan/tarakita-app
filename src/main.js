@@ -1,7 +1,7 @@
 import App from 'view/App.svelte';
 
-import { freeUtilsInterpretor } from 'fp/free'; 
-import { addSop, registerStaticInterpretor} from 'fp/sop';
+import { freeUtilsInterpretor } from 'fp/free';
+import { addSop, registerStaticInterpretor } from 'fp/sop';
 import { setupDatabaseInterpretor } from 'app/database';
 import { setupKVInterpretor } from 'app/kv';
 import { navigationInterpretor, start } from 'app/router';

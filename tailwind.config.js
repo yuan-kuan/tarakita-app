@@ -7,7 +7,9 @@ module.exports = {
     options: {
       whitelistPatterns: [/svelte-/],
       defaultExtractor: (content) =>
-        [...content.matchAll(/(?:class:)*([\w\d-/:%.]+)/gm)].map(([_match, group, ..._rest]) => group),
+        [...content.matchAll(/(?:class:)*([\w\d-/:%.]+)/gm)].map(
+          ([_match, group, ..._rest]) => group
+        ),
     },
   },
   darkMode: false, // or 'media' or 'class'
@@ -18,4 +20,4 @@ module.exports = {
     extend: {},
   },
   plugins: [],
-}
+};

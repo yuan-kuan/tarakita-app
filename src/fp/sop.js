@@ -118,5 +118,5 @@ export {
   registerStaticInterpretor,
   registerDynamicInterpretorGetter,
   registerDerefInterpretor,
-  getDeref
+  getDeref,
 };

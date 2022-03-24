@@ -3,11 +3,11 @@
   const { performParse, performUpload } = AskerStores;
 
   const fileChanged = (event) => {
-		let blob = event.target.files[0];
-		if (blob) {
-			$performParse(blob);
-		}
-  }
+    let blob = event.target.files[0];
+    if (blob) {
+      $performParse(blob);
+    }
+  };
 </script>
 
 <h1>Ask your question here</h1>
@@ -17,6 +17,6 @@
 <label>Question CSV</label>
 <input type="file" on:change={fileChanged} />
 
-<br>
+<br />
 
 <button on:click={$performUpload}>Upload question</button>

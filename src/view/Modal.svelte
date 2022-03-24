@@ -3,12 +3,12 @@
 </script>
 
 <div
-  class="fixed z-30 w-screen h-screen top-0 left-0 bg-gray-900 bg-opacity-10 flex items-center justify-center"
+  class="fixed top-0 left-0 z-30 flex h-screen w-screen items-center justify-center bg-gray-900 bg-opacity-10"
   on:click
 >
   <div
     id="content"
-    class="relative rounded-3xl overflow-auto mx-8 my-12"
+    class="relative mx-8 my-12 overflow-auto rounded-3xl"
     transition:fade={{ duration: 500 }}
     on:click|stopPropagation={() => {}}
   >

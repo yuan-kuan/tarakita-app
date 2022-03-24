@@ -8,9 +8,7 @@
       "test": ["test"]
     },
     "checkJs": true,
-    "skipLibCheck": true,
+    "skipLibCheck": true
   },
-  "include": [
-    "src"
-  ]
+  "include": ["src"]
 }

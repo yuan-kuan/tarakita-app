@@ -16,7 +16,7 @@
 
 <Tailwindcss />
 <main
-  class="bg-white relative min-h-screen max-h-screen max-w-screen-md mx-auto overflow-y-auto"
+  class="relative mx-auto max-h-screen min-h-screen max-w-screen-md overflow-y-auto bg-white"
 >
   <svelte:component this={$primaryView} />
 

@@ -91,15 +91,15 @@ function createArrayRef() {
         data = R.clone(value);
         originalRefset(sopId, R.clone(data));
       }
-    } 
-  }
+    }
+  };
 
   const append = (sopId, value) => {
     if (verifyOwnership(sopId)) {
       data = data.concat(value);
       originalRefset(sopId, R.clone(data));
     }
-  }
+  };
 
   function update(sopId, index, value) {
     if (verifyOwnership(sopId)) {
@@ -131,7 +131,7 @@ const Ref = daggy.taggedSum('Ref', {
   Reset: ['ref'],
   Set: ['ref', 'value'],
   Update: ['ref', 'key', 'value'],
-  Append: ['ref', 'value']
+  Append: ['ref', 'value'],
 });
 // @ts-ignore
 const { Deref, Get, Set, Reset, Update, Append } = Ref;
@@ -147,7 +147,7 @@ const refToFuture = (deref) => (p) =>
           reject(error);
         }
 
-        return () => { };
+        return () => {};
       }),
     Set: (ref, value) =>
       Future((reject, resolve) => {
@@ -158,40 +158,37 @@ const refToFuture = (deref) => (p) =>
         } catch (error) {
           reject(error);
         }
-        return () => { };
+        return () => {};
       }),
     Reset: (ref) =>
       Future((reject, resolve) => {
         try {
-        deref(ref).reset();
-        resolve();
-
+          deref(ref).reset();
+          resolve();
         } catch (error) {
           reject(error);
         }
-        return () => { };
+        return () => {};
       }),
     Update: (ref, key, value) =>
       Future((reject, resolve) => {
         try {
-        deref(ref).update(key, value);
-        resolve();
-
+          deref(ref).update(key, value);
+          resolve();
         } catch (error) {
           reject(error);
         }
-        return () => { };
+        return () => {};
       }),
     Append: (ref, value) =>
       Future((reject, resolve) => {
         try {
-        deref(ref).append(value);
-        resolve();
-
+          deref(ref).append(value);
+          resolve();
         } catch (error) {
           reject(error);
         }
-        return () => { };
+        return () => {};
       }),
   });
 

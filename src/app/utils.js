@@ -17,16 +17,19 @@ const utilsToFuture = (p) =>
   p.cata({
     Random: (_) => resolve(Math.random()),
     Reload: (_) => resolve(window.location.reload()),
-    FetchJson: (url, options) => Future((reject, resolve) => {
-      fetch(url, options).then((result) => {
-        if (result.ok) {
-          result.json().then(resolve);
-        } else {
-          result.text().then(reject);
-        }
-      }).catch(reject);
-      return () => { };
-    }),
+    FetchJson: (url, options) =>
+      Future((reject, resolve) => {
+        fetch(url, options)
+          .then((result) => {
+            if (result.ok) {
+              result.json().then(resolve);
+            } else {
+              result.text().then(reject);
+            }
+          })
+          .catch(reject);
+        return () => {};
+      }),
   });
 
 const random = () => lift(Random(null));

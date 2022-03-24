@@ -1,10 +1,25 @@
 import * as R from 'ramda';
 
 import * as free from 'fp/free';
-import {createTestHelper} from 'test/utils';
+import { createTestHelper } from 'test/utils';
 
-import {addVenue, addArea, addTopic, addQuestion, storeState, addSubtopic} from './tree_builder';
-import {findRoots, findChildren, findParent, hasNextSibling, getNextSibling, typeOf, hasSubtopic} from './tree';
+import {
+  addVenue,
+  addArea,
+  addTopic,
+  addQuestion,
+  storeState,
+  addSubtopic,
+} from './tree_builder';
+import {
+  findRoots,
+  findChildren,
+  findParent,
+  hasNextSibling,
+  getNextSibling,
+  typeOf,
+  hasSubtopic,
+} from './tree';
 import * as answer from './answer';
 import { createAndSave } from './user';
 
@@ -34,21 +49,21 @@ beforeEach(async () => {
     addArea('area 2'),
     addTopic('topic 1'),
     addQuestion('question 1'),
-    addQuestion('question 2'),
+    addQuestion('question 2')
   )({});
 
   const userFormData = {
     name: 'test user ali',
     oku: true,
-    forms: ['blind']
+    forms: ['blind'],
   };
 
   await interpret(
     free.sequence([
       storeState(state),
-      createAndSave(userFormData), 
-      answer.init(),      
-    ]),
+      createAndSave(userFormData),
+      answer.init(),
+    ])
   );
 });
 
@@ -64,10 +79,12 @@ test('at the beginning, all answer are not given', async () => {
 
 test('submitting an anwer will reduce the total unanswered', async () => {
   const submission = answer.createSubmission(2);
-  const fm = free.sequence([
-    answer.submit('q_venue+01+01-01', submission),
-    answer.ratio('q_venue')
-  ]).map(R.last);
+  const fm = free
+    .sequence([
+      answer.submit('q_venue+01+01-01', submission),
+      answer.ratio('q_venue'),
+    ])
+    .map(R.last);
   const result = await interpret(fm);
 
   expect(result).toMatchObject({
@@ -78,22 +95,24 @@ test('submitting an anwer will reduce the total unanswered', async () => {
 
 test('submitting an anwer will update the answer/not answer ratio, for all parents', async () => {
   const submission = answer.createSubmission(2);
-  const fm = free.sequence([
-    answer.submit('q_venue+01+01-01', submission),
-    answer.submit('q_venue+01+01-02', submission),
-    answer.submit('q_venue+01+02+01-01', submission),
-    answer.submit('q_venue+01+03-01', submission),
-    answer.ratio('q_venue+01-01'),
-    answer.ratio('q_venue+01-02'),
-    answer.ratio('q_venue-01'),
-  ]).map(R.takeLast(3));
+  const fm = free
+    .sequence([
+      answer.submit('q_venue+01+01-01', submission),
+      answer.submit('q_venue+01+01-02', submission),
+      answer.submit('q_venue+01+02+01-01', submission),
+      answer.submit('q_venue+01+03-01', submission),
+      answer.ratio('q_venue+01-01'),
+      answer.ratio('q_venue+01-02'),
+      answer.ratio('q_venue-01'),
+    ])
+    .map(R.takeLast(3));
   const result = await interpret(fm);
 
   expect(result[0]).toMatchObject({
     answered: 2,
     total: 3,
   });
-  
+
   expect(result[1]).toMatchObject({
     answered: 1,
     total: 4,
@@ -107,22 +126,24 @@ test('submitting an anwer will update the answer/not answer ratio, for all paren
 
 test('submitting all answer under a topic and subtopic will mark it complete', async () => {
   const submission = answer.createSubmission(3);
-  const fm = free.sequence([
-    answer.submit('q_venue+01+02+01-01', submission),
-    answer.submit('q_venue+01+02+01-02', submission),
-    answer.submit('q_venue+01+02+02-01', submission),
-    answer.submit('q_venue+01+02+02-02', submission),
-    answer.ratio('q_venue+01+02-01'),
-    answer.ratio('q_venue+01+02-02'),
-    answer.ratio('q_venue+01-02'),
-  ]).map(R.takeLast(3));
+  const fm = free
+    .sequence([
+      answer.submit('q_venue+01+02+01-01', submission),
+      answer.submit('q_venue+01+02+01-02', submission),
+      answer.submit('q_venue+01+02+02-01', submission),
+      answer.submit('q_venue+01+02+02-02', submission),
+      answer.ratio('q_venue+01+02-01'),
+      answer.ratio('q_venue+01+02-02'),
+      answer.ratio('q_venue+01-02'),
+    ])
+    .map(R.takeLast(3));
   const result = await interpret(fm);
 
   expect(result[0]).toMatchObject({
     answered: 2,
     total: 2,
   });
-  
+
   expect(result[1]).toMatchObject({
     answered: 2,
     total: 2,
@@ -136,24 +157,26 @@ test('submitting all answer under a topic and subtopic will mark it complete', a
 
 test('calculate a total score after a venue is fully answered', async () => {
   const submission = answer.createSubmission(4);
-  const fm = free.sequence([
-    answer.submit('q_venue+01+01-01', submission),
-    answer.submit('q_venue+01+01-02', submission),
-    answer.submit('q_venue+01+01-03', submission),
-    answer.submit('q_venue+01+02+01-01', submission),
-    answer.submit('q_venue+01+02+01-01', submission),
-    answer.submit('q_venue+01+02+01-02', submission),
-    answer.submit('q_venue+01+02+02-01', submission),
-    answer.submit('q_venue+01+02+02-02', submission),
-    answer.submit('q_venue+01+03-01', submission),
-    answer.submit('q_venue+01+03-02', submission),
-    answer.submit('q_venue+02+01-01', submission),
-    answer.submit('q_venue+02+01-02', submission),
-    answer.finalResult('q_venue')
-  ]).map(R.last);
+  const fm = free
+    .sequence([
+      answer.submit('q_venue+01+01-01', submission),
+      answer.submit('q_venue+01+01-02', submission),
+      answer.submit('q_venue+01+01-03', submission),
+      answer.submit('q_venue+01+02+01-01', submission),
+      answer.submit('q_venue+01+02+01-01', submission),
+      answer.submit('q_venue+01+02+01-02', submission),
+      answer.submit('q_venue+01+02+02-01', submission),
+      answer.submit('q_venue+01+02+02-02', submission),
+      answer.submit('q_venue+01+03-01', submission),
+      answer.submit('q_venue+01+03-02', submission),
+      answer.submit('q_venue+02+01-01', submission),
+      answer.submit('q_venue+02+01-02', submission),
+      answer.finalResult('q_venue'),
+    ])
+    .map(R.last);
   const result = await interpret(fm);
 
-  expect(result).toBe(44)
+  expect(result).toBe(44);
 });
 
 test('get an unanswered answer for the question', async () => {
@@ -164,43 +187,49 @@ test('get an unanswered answer for the question', async () => {
 });
 
 test('get an answer for the question', async () => {
-  const fm = free.sequence([
-    answer.submit('q_venue+01+01-01', answer.createSubmission(3)),
-    answer.getAnswer('q_venue+01+01-01')  
-  ]).map(R.last);
+  const fm = free
+    .sequence([
+      answer.submit('q_venue+01+01-01', answer.createSubmission(3)),
+      answer.getAnswer('q_venue+01+01-01'),
+    ])
+    .map(R.last);
   const result = await interpret(fm);
 
   expect(result).toMatchObject({
-    rating: 3
+    rating: 3,
   });
 });
 
 test('change the answer for the question', async () => {
-  const fm = free.sequence([
-    answer.submit('q_venue+01+01-01', answer.createSubmission(3)),
-    answer.submit('q_venue+01+01-01', answer.createSubmission(1)),
-    answer.getAnswer('q_venue+01+01-01'), 
-  ]).map(R.last);
+  const fm = free
+    .sequence([
+      answer.submit('q_venue+01+01-01', answer.createSubmission(3)),
+      answer.submit('q_venue+01+01-01', answer.createSubmission(1)),
+      answer.getAnswer('q_venue+01+01-01'),
+    ])
+    .map(R.last);
   const result = await interpret(fm);
 
   expect(result).toMatchObject({
-    rating: 1
+    rating: 1,
   });
   expect(result._rev[0]).toBe('3');
 });
 
 test('do no push an unchanged answer', async () => {
-  const fm = free.sequence([
-    answer.submit('q_venue+01+01-01', answer.createSubmission(3)),
-    answer.submit('q_venue+01+01-01', answer.createSubmission(3)),
-    answer.submit('q_venue+01+01-01', answer.createSubmission(3)),
-    answer.submit('q_venue+01+01-01', answer.createSubmission(3)),
-    answer.getAnswer('q_venue+01+01-01')  
-  ]).map(R.last);
+  const fm = free
+    .sequence([
+      answer.submit('q_venue+01+01-01', answer.createSubmission(3)),
+      answer.submit('q_venue+01+01-01', answer.createSubmission(3)),
+      answer.submit('q_venue+01+01-01', answer.createSubmission(3)),
+      answer.submit('q_venue+01+01-01', answer.createSubmission(3)),
+      answer.getAnswer('q_venue+01+01-01'),
+    ])
+    .map(R.last);
   const result = await interpret(fm);
 
   expect(result).toMatchObject({
-    rating: 3
+    rating: 3,
   });
   expect(result._rev[0]).toBe('2');
 });

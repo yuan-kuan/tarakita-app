@@ -4,7 +4,6 @@ import daggy from 'daggy';
 import * as fluture from 'fluture';
 import * as R from 'ramda';
 
-
 /**
  * @typedef {object} FreeMonadType
  * @property {function(function): FreeMonadType=} map
@@ -13,29 +12,28 @@ import * as R from 'ramda';
  * @property {function(function): FreeMonadType=} call
  * @preperty {function} Pure
  * @preperty {function} Impure
-*/
+ */
 
-const FreeMonad = daggy.taggedSum(
-  'FreeMonad', {
+const FreeMonad = daggy.taggedSum('FreeMonad', {
   Impure: ['x', 'f'],
   Pure: ['x'],
 });
 
 // @ts-ignore
-const {Pure, Impure} = FreeMonad;
+const { Pure, Impure } = FreeMonad;
 
 /**
  * @function
  * @param {any} a
  * @returns {FreeMonadType} a Free Monad
-*/
+ */
 const of = (a) => Pure(a); // FreeMonad.of
 
 /**
  * @function
  * @param {any} command kind SumType
  * @returns {FreeMonadType} a Free Monad
-*/
+ */
 const lift = (command) => Impure(command, Pure);
 
 // @ts-ignore internal used
@@ -85,7 +83,10 @@ FreeMonad.prototype.foldMap = function (interpreter, of) {
           interpreted
         );
       } else {
-        console.assert(typeof interpreted === 'function', `Bad interpreted ${interpreted}`);
+        console.assert(
+          typeof interpreted === 'function',
+          `Bad interpreted ${interpreted}`
+        );
 
         let future = interpreted(interpreter, of);
         return fluture.chain((result) => next(result).foldMap(interpreter, of))(
@@ -134,7 +135,6 @@ const freeUtilsToFuture = (p) =>
     Right: fluture.resolve,
   });
 
-
 // [Free(Future)] -> Free(Future)
 // This take in an array of free monads (which must interprete into Future).
 // All interpreted Futures will run by Fluture's parallel command.
@@ -144,7 +144,7 @@ const freeUtilsToFuture = (p) =>
  * @function
  * @param {FreeMonadType[]} freeMonads
  * @returns FreeMonadType
-*/
+ */
 const parallel = (freeMonads) => lift(Parallel(freeMonads));
 // @ts-ignore seqence wasn't typed by Ramda
 const parallelConverge = R.converge((...freeMonads) => parallel(freeMonads));
@@ -153,7 +153,7 @@ const parallelConverge = R.converge((...freeMonads) => parallel(freeMonads));
  * @function
  * @param {FreeMonadType[]} freeMonads
  * @returns FreeMonadType
-*/
+ */
 // @ts-ignore seqence wasn't typed by Ramda
 const sequence = (freeMonads) => R.sequence(of, freeMonads);
 
@@ -183,7 +183,7 @@ const bichain = R.curry((left, right, freeMonad) =>
   lift(Bichain(left, right, freeMonad))
 );
 
-const left = (v) => lift(Left(v))
+const left = (v) => lift(Left(v));
 const right = (v) => lift(Right(v));
 
 const interpete = (freeMonad) => (interpreter, of) =>

@@ -15,7 +15,11 @@ const MemPouch = PouchDB.defaults({
 });
 
 /// Boolean -> ( Free Monad -> Promise )
-export const createTestHelper = (useDb = false, useKv = false, extraInterpretors = []) => {
+export const createTestHelper = (
+  useDb = false,
+  useKv = false,
+  extraInterpretors = []
+) => {
   const defaultInterpretors = [utilsInterpretor, freeUtilsInterpretor];
 
   let interpretors;
@@ -46,7 +50,6 @@ export const createTestHelper = (useDb = false, useKv = false, extraInterpretors
       return (freeMonad) => {
         return promise(freeMonad.foldMap(dispatch(interpretors), resolve));
       };
-    }
+    },
   };
-}
-
+};
