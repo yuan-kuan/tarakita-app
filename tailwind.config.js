@@ -35,11 +35,10 @@ module.exports = {
       'w-3/12',
       'w-2/12',
       'w-1/12',
-    ]
+    ],
   },
   darkMode: false, // or 'media' or 'class'
   theme: {
-
     extend: {
       colors: {
         primary: '#cae00d',
@@ -49,10 +48,10 @@ module.exports = {
         neutral: '#f9f8d0',
       },
       textColor: {
-        'primary': '#2a2a2a',
-        'secondary': '#ffed4a',
-        'danger': '#e3342f',
-      }
+        primary: '#2a2a2a',
+        secondary: '#ffed4a',
+        danger: '#e3342f',
+      },
     },
   },
   variants: {
