@@ -1,28 +1,46 @@
 <script>
+  import { onDestroy } from 'svelte';
   import { AnsweringStores } from 'app/stores';
 
-  const { ancestors, question, hasNext, goToNext, backToParent, submit } =
+  const { ancestors, question, hasNext, goToNext, backToParent, submit, rating } =
     AnsweringStores;
 
   let yesOrNo;
-  let rating;
+  let currentRating;
+  let canSubmit = false;
+
+  const unsub = rating.subscribe((v) => {
+  	if (v != undefined) {
+    	currentRating = v
+			yesOrNo = v == 0 ? false : true;
+  	}
+  }); 
 
   $: {
-    console.log('yes or no', yesOrNo);
+    if (yesOrNo == true && currentRating != undefined) {
+			canSubmit = true;
+    } else if (yesOrNo == false) {
+			canSubmit = true;
+    } else {
+			canSubmit = false;
+    }
   }
+
+  const rateNow = (e) => {
+		$submit(currentRating ?? 0);
+		yesOrNo = undefined;
+		currentRating = undefined;
+		canSubmit = false;
+  }
+
+  onDestroy(unsub);
 </script>
 
 <section class="container p-4">
   <h2 class="px-4 py-6 text-lg">{$question}</h2>
 
-  <label
-    for="entry"
-    class="mb-2 block text-sm font-semibold text-gray-700 lg:text-base"
-  >
-    Your Rating
-  </label>
   <div class="flex w-full">
-    <div class="grid w-full grid-cols-4 gap-4">
+    <div class="w-full flex justify-around">
       <div class="radio inline-block">
         <input
           name="yesOrNo"
@@ -34,7 +52,7 @@
         />
         <label
           for="yes1"
-          class="flex h-10 w-10 items-center justify-center rounded-lg px-2 py-1 text-3xl font-bold lg:h-14 lg:w-14 lg:text-5xl"
+          class="flex h-15 w-20 items-center justify-center rounded-lg px-2 py-1 text-3xl font-bold lg:h-14 lg:w-14 lg:text-5xl"
         >
           yes
         </label>
@@ -51,7 +69,7 @@
         />
         <label
           for="no1"
-          class="flex h-10 w-10 items-center justify-center rounded-lg px-2 py-1 text-3xl font-bold lg:h-14 lg:w-14 lg:text-5xl"
+          class="flex h-15 w-20 items-center justify-center rounded-lg px-2 py-1 text-3xl font-bold lg:h-14 lg:w-14 lg:text-5xl"
         >
           no
         </label>
@@ -59,26 +77,27 @@
     </div>
   </div>
 
+	{#if yesOrNo}
+	<div>
   <label
     for="entry"
     class="mb-2 block text-sm font-semibold text-gray-700 lg:text-base"
   >
     Your Rating
   </label>
-  <div class="flex w-full flex-col">
-    <div class="grid w-full grid-cols-6 gap-2 xl:grid-cols-12">
+  <div class="flex w-full flex justify-around">
       <div class="radio inline-block">
         <input
-          name="rating"
+          name="currentRating"
           type="radio"
           id="rate1"
           hidden="hidden"
-          bind:group={rating}
+          bind:group={currentRating}
           value={1}
         />
         <label
           for="rate1"
-          class="flex h-10 w-10 items-center justify-center rounded-lg px-2 py-1 text-3xl font-bold lg:h-14 lg:w-14 lg:text-5xl"
+          class="flex h-10 w-10 items-center justify-center rounded-full px-2 py-1 text-3xl font-bold lg:h-14 lg:w-14 lg:text-5xl"
         >
           1
         </label>
@@ -86,16 +105,16 @@
 
       <div class="radio inline-block">
         <input
-          name="rating"
+          name="currentRating"
           type="radio"
           id="rate2"
           hidden="hidden"
-          bind:group={rating}
+          bind:group={currentRating}
           value={2}
         />
         <label
           for="rate2"
-          class="flex h-10 w-10 items-center justify-center rounded-lg px-2 py-1 text-3xl font-bold lg:h-14 lg:w-14 lg:text-5xl"
+          class="flex h-10 w-10 items-center justify-center rounded-full px-2 py-1 text-3xl font-bold lg:h-14 lg:w-14 lg:text-5xl"
         >
           2
         </label>
@@ -103,16 +122,16 @@
 
       <div class="radio inline-block">
         <input
-          name="rating"
+          name="currentRating"
           type="radio"
           id="rate3"
           hidden="hidden"
-          bind:group={rating}
+          bind:group={currentRating}
           value={3}
         />
         <label
           for="rate3"
-          class="flex h-10 w-10 items-center justify-center rounded-lg px-2 py-1 text-3xl font-bold lg:h-14 lg:w-14 lg:text-5xl"
+          class="flex h-10 w-10 items-center justify-center rounded-full px-2 py-1 text-3xl font-bold lg:h-14 lg:w-14 lg:text-5xl"
         >
           3
         </label>
@@ -120,22 +139,23 @@
 
       <div class="radio inline-block">
         <input
-          name="rating"
+          name="currentRating"
           type="radio"
           id="rate4"
           hidden="hidden"
-          bind:group={rating}
+          bind:group={currentRating}
           value={4}
         />
         <label
           for="rate4"
-          class="flex h-10 w-10 items-center justify-center rounded-lg px-2 py-1 text-3xl font-bold lg:h-14 lg:w-14 lg:text-5xl"
+          class="flex h-10 w-10 items-center justify-center rounded-full px-2 py-1 text-3xl font-bold lg:h-14 lg:w-14 lg:text-5xl"
         >
           4
         </label>
       </div>
-    </div>
   </div>
+  </div>
+  {/if}
 </section>
 
 <section class="container p-4">
@@ -144,12 +164,11 @@
     on:click={$backToParent}
     >Back
   </button>
-  {#if $hasNext}
     <button
-      class="hover:bg-blue-dark rounded bg-blue-500 py-2 px-6 font-bold text-white"
-      on:click={$goToNext}>Next Question</button
+      class="hover:bg-blue-dark rounded bg-blue-500 py-2 px-6 font-bold text-white disabled:cursor-not-allowed disabled:bg-gray-200"
+      disabled={!canSubmit}
+      on:click={rateNow}>Submit</button
     >
-  {/if}
 </section>
 
 <style>

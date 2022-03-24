@@ -40,11 +40,11 @@ const goToNextQuestion = (id) =>
       )
     );
 
-const performSubmitAnswer = (answerId, questionId, rating) =>
-  free.sequence([
-    free.of(rating).map(answer.createSubmission).chain(answer.submit(answerId)),
+const performSubmitAnswer = (questionId, rating) =>{
+  return free.sequence([
+    free.of(rating).map(answer.createSubmission).chain(answer.submit(questionId)),
     goToNextQuestion(questionId),
-  ]);
+  ]);}
 
 const presentQuestion = (id) =>
   free.sequence([
@@ -57,7 +57,7 @@ const presentQuestion = (id) =>
           setRef(AnsweringStores.rating, R.view(L.rating, answerDoc)),
           setRef(AnsweringStores.submit, (rating) =>
             addSop(() =>
-              performSubmitAnswer(R.view(L.id, answerDoc), id, rating)
+              performSubmitAnswer(id, rating)
             )
           ),
         ])
