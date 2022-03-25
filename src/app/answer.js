@@ -9,6 +9,7 @@ const L = {
   type: R.lensProp('type'),
   rating: R.lensProp('rating'),
   comment: R.lensProp('comment'),
+  user: R.lensProp('user'),
   positive: R.lensProp('positive'),
   negative: R.lensProp('negative'),
   answered: R.lensProp('answered'),
@@ -22,6 +23,10 @@ const leafDot = '-';
 const parentDot = '+';
 
 const convertToParentId = (id) => id.replace(leafDot, parentDot);
+const userIdFromId = R.pipe(
+  R.split(/:/),
+  R.last
+);
 
 const convertToAnswerPrefix = R.replace(/q/, 'a');
 const convertToCommentPrefix = R.replace(/q/, 'c');
@@ -48,7 +53,11 @@ const generateAllDocOption = (id) =>
   )({});
 
 const generateEmptyAnswerDoc = (id) =>
-  R.pipe(R.set(L.id, id), R.set(L.type, 'answer'))({});
+  R.pipe(
+    R.set(L.id, id),
+    R.set(L.type, 'answer'),
+    R.set(L.user, userIdFromId(id)))
+  ({});
 
 const findAllAnswerUnder = (id) =>
   free

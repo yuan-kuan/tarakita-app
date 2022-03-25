@@ -6,7 +6,7 @@
 
 <div class="flex min-h-screen flex-col">
   <section class="bg-primary p-8">
-    <h1 class="text-2xl text-white">Where are you?</h1>
+    <h1 class="text-3xl text-white">Where are you?</h1>
   </section>
 
   <section class="flex grow flex-col items-center pt-20">

@@ -8,7 +8,12 @@
   let title, subtitle, topic;
 
   const unsub = ancestors.subscribe((values) => {
+    title = undefined;
+    subtitle = undefined;
+    topic = undefined;
+
     values.push($currentName);
+
     if (values.length >= 1) {
       title = values[0];
     }
@@ -23,28 +28,43 @@
   onDestroy(unsub);
 </script>
 
-<section class="bg-blue-300 p-2">
-  <button on:click={$backToParent}>back</button>
-  {#if title}
-    <h1>{title}</h1>
-  {/if}
-  {#if subtitle}
-    <h2>{subtitle}</h2>
-  {/if}
+<div class="flex min-h-screen flex-col">
+  <section class="flex flex-row bg-primary p-4">
+    <button on:click={$backToParent}>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="h-10 w-10 text-white"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+        stroke-width="2"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M15 19l-7-7 7-7"
+        />
+      </svg>
+    </button>
+
+    {#if subtitle}
+      <div class="flex flex-col h-14">
+        <span class="text-3xl font-bold text-white">{title}</span>
+        <span class="text-xl text-white">{subtitle}</span>
+      </div>
+    {:else}
+      <div class="flex flex-col h-14">
+        <span class="text-white text-3xl font-bold ">{title}</span>
+      </div>
+    {/if}
+  </section>
+
   {#if topic}
     <h3>{topic}</h3>
   {/if}
-</section>
-
-<section class="container p-4">
-  <ul>
+  <section class="flex grow flex-col items-center pt-20">
     {#each $options as option, index}
-      <li class="m-4">
-        <button
-          class="hover:bg-blue-dark w-full rounded bg-blue-500 py-2 px-6 font-bold text-white"
-          on:click={$goToOptions[index]}>{option}</button
-        >
-      </li>
+      <button class="topic-btn my-2" on:click={$goToOptions[index]}>{option}</button>
     {/each}
-  </ul>
-</section>
+  </section>
+</div>
