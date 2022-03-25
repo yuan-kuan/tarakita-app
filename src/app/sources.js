@@ -2,7 +2,8 @@ import * as R from 'ramda';
 import * as free from 'fp/free';
 import * as db from 'app/database';
 
-const dbUrl = 'http://localhost:5984/tka_1';
+//const dbUrl = 'http://localhost:5984/tka_1';
+const dbUrl = DB_URL;
 
 const downloadQuestion = () =>
   db.replicateFrom(dbUrl, { filter: 'replicate/question' });

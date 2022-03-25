@@ -6,9 +6,17 @@ import livereload from 'rollup-plugin-livereload';
 import { terser } from 'rollup-plugin-terser';
 import css from 'rollup-plugin-css-only';
 import sveltePreprocess from 'svelte-preprocess';
+import { config } from 'dotenv';
+import replace from '@rollup/plugin-replace';
 import alias from '@rollup/plugin-alias';
 
 const production = !process.env.ROLLUP_WATCH;
+
+if (process.env.LOCAL) {
+  config({ path: '.env.local' });
+} else {
+  config();
+}
 
 function serve() {
   let server;
@@ -44,6 +52,11 @@ export default {
     file: 'public/build/bundle.js',
   },
   plugins: [
+    replace({
+      // stringify the object
+      DB_URL: JSON.stringify(process.env.DB_URL),
+      preventAssignment: true,
+    }),
     alias({
       entries: [
         { find: 'fp', replacement: __dirname + '/src/fp' },
