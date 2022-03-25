@@ -41,13 +41,14 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        primary: '#cae00d',
+        primary: '#0085d9',
         'primary-accent': '#e5f086',
         secondary: '#feb526',
         'secondary-accent': '#ffd03a',
         neutral: '#f9f8d0',
       },
       textColor: {
+        asPrimary: '#0085d9',
         primary: '#2a2a2a',
         secondary: '#ffed4a',
         danger: '#e3342f',

@@ -5,9 +5,9 @@
 </script>
 
 <div class="mb-4">
-  <label class="flex items-start justify-start">
+  <label class="flex items-center justify-start">
     {#if main}
-      <div class="select-none text-lg font-bold">{title}</div>
+      <div class="select-none pr-4 text-lg font-bold text-white">{title}</div>
       <div
         class="mr-2 flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full border-2 border-gray-400 bg-white focus-within:border-blue-500"
       >
@@ -17,8 +17,8 @@
           bind:checked={value}
         />
         <svg
-          class="pointer-events-none hidden h-7 w-7 fill-current text-green-500"
-          viewBox="0 0 20 20"><path d="M0 11l2-2 5 5L18 3l2 2L7 18z" /></svg
+          class="pointer-events-none hidden h-6 w-6 fill-current text-asPrimary"
+          viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" /></svg
         >
       </div>
     {:else}
@@ -31,11 +31,11 @@
           bind:checked={value}
         />
         <svg
-          class="fill-current hidden w-6 h-6 text-green-500 pointer-events-none"
-          viewBox="0 0 20 20"><path d="M0 11l2-2 5 5L18 3l2 2L7 18z" /></svg
+          class="pointer-events-none hidden h-5 w-5 fill-current text-asPrimary"
+          viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" /></svg
         >
       </div>
-      <div class="select-none text-lg">{title}</div>
+      <div class="select-none text-lg text-white">{title}</div>
     {/if}
   </label>
 </div>

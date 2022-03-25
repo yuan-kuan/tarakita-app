@@ -86,4 +86,11 @@ function start() {
 }
 
 export const navigationInterpretor = [Navigation, nagivationToFuture];
-export { start, setHomeUrl, setAskerUrl, setQuestionUrl, setRegisterUrl, setCommentUrl };
+export {
+  start,
+  setHomeUrl,
+  setAskerUrl,
+  setQuestionUrl,
+  setRegisterUrl,
+  setCommentUrl,
+};

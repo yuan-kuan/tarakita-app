@@ -8,7 +8,7 @@
 
   const submit = (e) => {
     $submitComment(positive, negative);
-  }
+  };
 </script>
 
 <header>Go back from here.</header>
@@ -38,9 +38,9 @@
         />
 
         <div class="flex justify-end">
-          <button class="rounded-full bg-black py-1 px-2 text-white"
-           on:click={submit}
-            >Comment</button
+          <button
+            class="rounded-full bg-black py-1 px-2 text-white"
+            on:click={submit}>Comment</button
           >
         </div>
       </div>

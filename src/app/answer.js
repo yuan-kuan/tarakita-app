@@ -166,7 +166,8 @@ const putComment = R.curry((questionId, submission) =>
     R.ifElse(isCommentTheSame(submission), R.always(free.of({})), (previous) =>
       free.of(previous).map(R.mergeLeft(submission)).chain(db.put)
     )
-  ));
+  )
+);
 
 export {
   init,

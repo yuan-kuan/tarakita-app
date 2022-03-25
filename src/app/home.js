@@ -34,7 +34,8 @@ const performCommentSubmission = (topicId, pos, neg) =>
     .of(answer.createCommentSubmission(pos, neg))
     .chain(answer.putComment(topicId))
     .chain((_) =>
-      free.of(topicId)
+      free
+        .of(topicId)
         .map(tapLog('topic'))
         .chain(tree.getAncestors)
         .map(R.last)
@@ -66,11 +67,13 @@ const goToNextQuestion = (id) =>
     .call(
       free.bichain(
         R.always(
-          free.of(id)
+          free
+            .of(id)
             .chain(tree.getAncestors)
             .map(R.last)
             .map(R.view(L.id))
-            .chain(goToComment)),
+            .chain(goToComment)
+        ),
         (nextQuestionDoc) =>
           free.of(nextQuestionDoc).map(R.view(L.id)).chain(goToQuestion)
       )
