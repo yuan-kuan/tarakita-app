@@ -98,7 +98,10 @@
     {/if}
   </header>
 <section class="container p-4">
-  <h2 class="px-4 py-6 text-lg">{$question}</h2>
+  
+  <h2 class="px-4 py-6 text-xl font-semibold">{topic}</h2>
+
+  <h2 class="px-4 py-4 text-lg">{$order}. {$question}</h2>
 
   <div class="flex w-full">
     <div class="flex w-full justify-around">
@@ -113,7 +116,8 @@
         />
         <label
           for="yes1"
-          class="h-15 flex w-20 items-center justify-center rounded-lg px-2 py-1 text-3xl font-bold lg:h-14 lg:w-14 lg:text-5xl"
+          class="yesno-radio"
+          class:yesno-radio-checked={yesOrNo == true}
         >
           yes
         </label>
@@ -130,7 +134,8 @@
         />
         <label
           for="no1"
-          class="h-15 flex w-20 items-center justify-center rounded-lg px-2 py-1 text-3xl font-bold lg:h-14 lg:w-14 lg:text-5xl"
+          class="yesno-radio"
+          class:yesno-radio-checked={yesOrNo == false}
         >
           no
         </label>
@@ -139,12 +144,12 @@
   </div>
 
   {#if yesOrNo}
-    <div>
+    <div class="px-4 py-6">
       <label
         for="entry"
-        class="mb-2 block text-sm font-semibold text-gray-700 lg:text-base"
+        class="mb-2 block text-lg font-semibold text-asPrimary "
       >
-        Your Rating
+        Rates:
       </label>
       <div class="flex flex w-full justify-around">
         <div class="radio inline-block">
@@ -158,7 +163,8 @@
           />
           <label
             for="rate1"
-            class="flex h-10 w-10 items-center justify-center rounded-full px-2 py-1 text-3xl font-bold lg:h-14 lg:w-14 lg:text-5xl"
+            class="rating-radio"
+            class:rating-radio-checked={currentRating == 1}
           >
             1
           </label>
@@ -175,7 +181,8 @@
           />
           <label
             for="rate2"
-            class="flex h-10 w-10 items-center justify-center rounded-full px-2 py-1 text-3xl font-bold lg:h-14 lg:w-14 lg:text-5xl"
+            class="rating-radio"
+            class:rating-radio-checked={currentRating == 2}
           >
             2
           </label>
@@ -192,7 +199,8 @@
           />
           <label
             for="rate3"
-            class="flex h-10 w-10 items-center justify-center rounded-full px-2 py-1 text-3xl font-bold lg:h-14 lg:w-14 lg:text-5xl"
+            class="rating-radio"
+            class:rating-radio-checked={currentRating == 3}
           >
             3
           </label>
@@ -209,7 +217,8 @@
           />
           <label
             for="rate4"
-            class="flex h-10 w-10 items-center justify-center rounded-full px-2 py-1 text-3xl font-bold lg:h-14 lg:w-14 lg:text-5xl"
+            class="rating-radio"
+            class:rating-radio-checked={currentRating == 4}
           >
             4
           </label>
@@ -236,14 +245,3 @@
   >
 </section>
 </div>
-
-<style>
-  .radio input ~ label {
-    background-color: rgb(233, 225, 225);
-    color: rgb(158, 146, 146);
-  }
-  .radio input:checked ~ label {
-    background-color: rgb(70, 230, 22);
-    color: white;
-  }
-</style>
