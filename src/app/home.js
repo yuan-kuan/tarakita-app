@@ -21,7 +21,7 @@ const L = {
   id: R.lensProp('_id'),
   value: R.lensProp('value'),
   rating: R.lensProp('rating'),
-  total: R.lensProp('total')
+  total: R.lensProp('total'),
 };
 
 const makeGoTos = (docs) =>
@@ -119,7 +119,8 @@ const presentChildren = (children) =>
   ]);
 
 const presentTotal = (ancestors) =>
-  free.of(ancestors)
+  free
+    .of(ancestors)
     .map(R.last)
     .map(R.view(L.id))
     .chain(answer.ratio)
@@ -140,7 +141,7 @@ const presentQuestionAncestor = (id) =>
             )
           )
         ),
-        presentTotal(ancestors)
+        presentTotal(ancestors),
       ])
     );
 

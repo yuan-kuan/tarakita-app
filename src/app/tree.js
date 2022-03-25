@@ -55,11 +55,8 @@ const hasSubtopic = (id) =>
 
 const getQuestion = (id) => free.of(id).chain(db.get).map(R.view(L.value));
 
-const orderOf = (id) => R.pipe(
-    R.split(leafDot),
-    R.view(R.lensIndex(1)),
-    parseInt,
-  )(id)
+const orderOf = (id) =>
+  R.pipe(R.split(leafDot), R.view(R.lensIndex(1)), parseInt)(id);
 
 const typeOf = (id) => free.of(id).chain(db.get).map(R.view(L.type));
 

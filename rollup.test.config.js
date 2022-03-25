@@ -1,8 +1,6 @@
-
 import { config } from 'dotenv';
 import replace from '@rollup/plugin-replace';
 import alias from '@rollup/plugin-alias';
-
 
 // if (process.env.LOCAL) {
 //   config({ path: '.env.local' });
@@ -23,7 +21,7 @@ export default {
         { find: 'fp', replacement: __dirname + '/src/fp' },
         { find: 'view', replacement: __dirname + '/src/view' },
         { find: 'app', replacement: __dirname + '/src/app' },
-      ]
+      ],
     }),
   ],
 };

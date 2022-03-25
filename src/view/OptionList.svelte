@@ -48,7 +48,7 @@
     </button>
 
     {#if subtitle}
-      <div class="flex flex-col h-14">
+      <div class="flex h-14 flex-col">
         <span class="text-3xl font-bold text-white">{title}</span>
         <span class="text-xl text-white">{subtitle}</span>
       </div>
@@ -64,7 +64,9 @@
   {/if}
   <section class="flex grow flex-col items-center pt-20">
     {#each $options as option, index}
-      <button class="topic-btn my-2" on:click={$goToOptions[index]}>{option}</button>
+      <button class="topic-btn my-2" on:click={$goToOptions[index]}
+        >{option}</button
+      >
     {/each}
   </section>
 </div>

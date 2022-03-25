@@ -11,7 +11,7 @@
     submit,
     rating,
     order,
-    total
+    total,
   } = AnsweringStores;
 
   let title, subtitle, topic;
@@ -61,13 +61,12 @@
   };
 
   onDestroy(() => {
-		unsubAncestors();
-		unsubRating();
+    unsubAncestors();
+    unsubRating();
   });
 </script>
 
 <div class="flex min-h-screen flex-col">
-  
   <header class="flex flex-row bg-primary p-4">
     <button on:click={$backToParent}>
       <svg
@@ -87,7 +86,7 @@
     </button>
 
     {#if subtitle}
-      <div class="flex flex-col h-14">
+      <div class="flex h-14 flex-col">
         <span class="text-3xl font-bold text-white">{title}</span>
         <span class="text-xl text-white">{subtitle}</span>
       </div>
@@ -97,151 +96,150 @@
       </div>
     {/if}
   </header>
-<section class="container p-4">
-  
-  <h2 class="px-4 py-6 text-xl font-semibold">{topic}</h2>
+  <section class="container p-4">
+    <h2 class="px-4 py-6 text-xl font-semibold">{topic}</h2>
 
-  <h2 class="px-4 py-4 text-lg">{$order}. {$question}</h2>
+    <h2 class="px-4 py-4 text-lg">{$order}. {$question}</h2>
 
-  <div class="flex w-full">
-    <div class="flex w-full justify-around">
-      <div class="radio inline-block">
-        <input
-          name="yesOrNo"
-          type="radio"
-          id="yes1"
-          hidden="hidden"
-          bind:group={yesOrNo}
-          value={true}
-        />
-        <label
-          for="yes1"
-          class="yesno-radio"
-          class:yesno-radio-checked={yesOrNo == true}
-        >
-          yes
-        </label>
-      </div>
-
-      <div class="radio inline-block">
-        <input
-          name="yesOrNo"
-          type="radio"
-          id="no1"
-          hidden="hidden"
-          bind:group={yesOrNo}
-          value={false}
-        />
-        <label
-          for="no1"
-          class="yesno-radio"
-          class:yesno-radio-checked={yesOrNo == false}
-        >
-          no
-        </label>
-      </div>
-    </div>
-  </div>
-
-  {#if yesOrNo}
-    <div class="px-4 py-6">
-      <label
-        for="entry"
-        class="mb-2 block text-lg font-semibold text-asPrimary "
-      >
-        Rates:
-      </label>
-      <div class="flex flex w-full justify-around">
+    <div class="flex w-full">
+      <div class="flex w-full justify-around">
         <div class="radio inline-block">
           <input
-            name="currentRating"
+            name="yesOrNo"
             type="radio"
-            id="rate1"
+            id="yes1"
             hidden="hidden"
-            bind:group={currentRating}
-            value={1}
+            bind:group={yesOrNo}
+            value={true}
           />
           <label
-            for="rate1"
-            class="rating-radio"
-            class:rating-radio-checked={currentRating == 1}
+            for="yes1"
+            class="yesno-radio"
+            class:yesno-radio-checked={yesOrNo == true}
           >
-            1
+            yes
           </label>
         </div>
 
         <div class="radio inline-block">
           <input
-            name="currentRating"
+            name="yesOrNo"
             type="radio"
-            id="rate2"
+            id="no1"
             hidden="hidden"
-            bind:group={currentRating}
-            value={2}
+            bind:group={yesOrNo}
+            value={false}
           />
           <label
-            for="rate2"
-            class="rating-radio"
-            class:rating-radio-checked={currentRating == 2}
+            for="no1"
+            class="yesno-radio"
+            class:yesno-radio-checked={yesOrNo == false}
           >
-            2
-          </label>
-        </div>
-
-        <div class="radio inline-block">
-          <input
-            name="currentRating"
-            type="radio"
-            id="rate3"
-            hidden="hidden"
-            bind:group={currentRating}
-            value={3}
-          />
-          <label
-            for="rate3"
-            class="rating-radio"
-            class:rating-radio-checked={currentRating == 3}
-          >
-            3
-          </label>
-        </div>
-
-        <div class="radio inline-block">
-          <input
-            name="currentRating"
-            type="radio"
-            id="rate4"
-            hidden="hidden"
-            bind:group={currentRating}
-            value={4}
-          />
-          <label
-            for="rate4"
-            class="rating-radio"
-            class:rating-radio-checked={currentRating == 4}
-          >
-            4
+            no
           </label>
         </div>
       </div>
     </div>
-  {/if}
-</section>
 
-<section>
-	<span class="w-full text-lg">{$order} of {$total}</span>
-</section>
+    {#if yesOrNo}
+      <div class="px-4 py-6">
+        <label
+          for="entry"
+          class="mb-2 block text-lg font-semibold text-asPrimary "
+        >
+          Rates:
+        </label>
+        <div class="flex flex w-full justify-around">
+          <div class="radio inline-block">
+            <input
+              name="currentRating"
+              type="radio"
+              id="rate1"
+              hidden="hidden"
+              bind:group={currentRating}
+              value={1}
+            />
+            <label
+              for="rate1"
+              class="rating-radio"
+              class:rating-radio-checked={currentRating == 1}
+            >
+              1
+            </label>
+          </div>
 
-<section class="container p-4">
-  <button
-    class="hover:bg-blue-dark rounded bg-blue-500 py-2 px-6 font-bold text-white"
-    on:click={$backToParent}
-    >Back
-  </button>
-  <button
-    class="hover:bg-blue-dark rounded bg-blue-500 py-2 px-6 font-bold text-white disabled:cursor-not-allowed disabled:bg-gray-200"
-    disabled={!canSubmit}
-    on:click={rateNow}>Submit</button
-  >
-</section>
+          <div class="radio inline-block">
+            <input
+              name="currentRating"
+              type="radio"
+              id="rate2"
+              hidden="hidden"
+              bind:group={currentRating}
+              value={2}
+            />
+            <label
+              for="rate2"
+              class="rating-radio"
+              class:rating-radio-checked={currentRating == 2}
+            >
+              2
+            </label>
+          </div>
+
+          <div class="radio inline-block">
+            <input
+              name="currentRating"
+              type="radio"
+              id="rate3"
+              hidden="hidden"
+              bind:group={currentRating}
+              value={3}
+            />
+            <label
+              for="rate3"
+              class="rating-radio"
+              class:rating-radio-checked={currentRating == 3}
+            >
+              3
+            </label>
+          </div>
+
+          <div class="radio inline-block">
+            <input
+              name="currentRating"
+              type="radio"
+              id="rate4"
+              hidden="hidden"
+              bind:group={currentRating}
+              value={4}
+            />
+            <label
+              for="rate4"
+              class="rating-radio"
+              class:rating-radio-checked={currentRating == 4}
+            >
+              4
+            </label>
+          </div>
+        </div>
+      </div>
+    {/if}
+  </section>
+
+  <section>
+    <span class="w-full text-lg">{$order} of {$total}</span>
+  </section>
+
+  <section class="container p-4">
+    <button
+      class="hover:bg-blue-dark rounded bg-blue-500 py-2 px-6 font-bold text-white"
+      on:click={$backToParent}
+      >Back
+    </button>
+    <button
+      class="hover:bg-blue-dark rounded bg-blue-500 py-2 px-6 font-bold text-white disabled:cursor-not-allowed disabled:bg-gray-200"
+      disabled={!canSubmit}
+      on:click={rateNow}>Submit</button
+    >
+  </section>
 </div>

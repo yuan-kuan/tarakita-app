@@ -23,10 +23,7 @@ const leafDot = '-';
 const parentDot = '+';
 
 const convertToParentId = (id) => id.replace(leafDot, parentDot);
-const userIdFromId = R.pipe(
-  R.split(/:/),
-  R.last
-);
+const userIdFromId = R.pipe(R.split(/:/), R.last);
 
 const convertToAnswerPrefix = R.replace(/q/, 'a');
 const convertToCommentPrefix = R.replace(/q/, 'c');
@@ -56,8 +53,8 @@ const generateEmptyAnswerDoc = (id) =>
   R.pipe(
     R.set(L.id, id),
     R.set(L.type, 'answer'),
-    R.set(L.user, userIdFromId(id)))
-  ({});
+    R.set(L.user, userIdFromId(id))
+  )({});
 
 const findAllAnswerUnder = (id) =>
   free
