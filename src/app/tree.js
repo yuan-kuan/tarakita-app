@@ -55,6 +55,12 @@ const hasSubtopic = (id) =>
 
 const getQuestion = (id) => free.of(id).chain(db.get).map(R.view(L.value));
 
+const orderOf = (id) => R.pipe(
+    R.split(leafDot),
+    R.view(R.lensIndex(1)),
+    parseInt,
+  )(id)
+
 const typeOf = (id) => free.of(id).chain(db.get).map(R.view(L.type));
 
 const getNextSibling = (id) => free.of(id).map(incrementId).chain(db.get);
@@ -97,6 +103,7 @@ export {
   getNextSibling,
   typeOf,
   getQuestion,
+  orderOf,
   hasSubtopic,
   getAncestors,
 };

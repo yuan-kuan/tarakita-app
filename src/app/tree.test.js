@@ -18,6 +18,7 @@ import {
   hasNextSibling,
   getNextSibling,
   typeOf,
+  orderOf,
   hasSubtopic,
   getAncestors,
 } from './tree';
@@ -276,4 +277,9 @@ test('get ancestors of different level', async () => {
   expect(result[3][3]).toMatchObject({ _id: 'q_venue+01+02-01' });
 });
 
-test('', async () => {});
+test('question order from id', async () => {
+  expect(orderOf('q_venue+01+01-01')).toBe(1);
+  expect(orderOf('q_venue+01+01-03')).toBe(3);
+  expect(orderOf('q_venue+01+02+01-01')).toBe(1);
+  expect(orderOf('q_venue+01+02+01-13')).toBe(13);
+});

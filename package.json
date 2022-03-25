@@ -48,7 +48,13 @@
   },
   "jest": {
     "transform": {
-      "\\.js$": "rollup-jest",
+      "\\.js$": [
+        "rollup-jest",
+        {
+          "configFile": "./rollup.test.config.js",
+          "args": "--environment LOCAL"
+        }
+      ],
       "^.+\\.svelte$": "svelte-jester"
     },
     "moduleFileExtensions": [
