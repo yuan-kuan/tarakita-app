@@ -97,9 +97,11 @@
     {/if}
   </header>
   <section class="container p-4">
-    <h2 class="px-4 py-6 text-xl font-semibold">{topic}</h2>
+    <div class="h-24 px-4 py-5 flex items-end">
+      <span class="text-xl font-semibold">{topic}</span>
+    </div>
 
-    <h2 class="px-4 py-4 text-lg">{$order}. {$question}</h2>
+    <h2 class="h-28 px-4 pb-4 text-lg">{$order}. {$question}</h2>
 
     <div class="flex w-full">
       <div class="flex w-full justify-around">
@@ -141,105 +143,133 @@
       </div>
     </div>
 
-    {#if yesOrNo}
-      <div class="px-4 py-6">
-        <label
-          for="entry"
-          class="mb-2 block text-lg font-semibold text-asPrimary "
-        >
-          Rates:
-        </label>
-        <div class="flex flex w-full justify-around">
-          <div class="radio inline-block">
-            <input
-              name="currentRating"
-              type="radio"
-              id="rate1"
-              hidden="hidden"
-              bind:group={currentRating}
-              value={1}
-            />
-            <label
-              for="rate1"
-              class="rating-radio"
-              class:rating-radio-checked={currentRating == 1}
-            >
-              1
-            </label>
-          </div>
+    <div class="px-4 py-6" class:opacity-0={yesOrNo != true}>
+      <label
+        for="entry"
+        class="mb-2 block text-lg font-semibold text-asPrimary "
+      >
+        Rates:
+      </label>
+      <div class="flex flex w-full justify-around">
+        <div class="radio inline-block">
+          <input
+            name="currentRating"
+            type="radio"
+            id="rate1"
+            hidden="hidden"
+            bind:group={currentRating}
+            value={1}
+          />
+          <label
+            for="rate1"
+            class="rating-radio"
+            class:rating-radio-checked={currentRating == 1}
+          >
+            1
+          </label>
+        </div>
 
-          <div class="radio inline-block">
-            <input
-              name="currentRating"
-              type="radio"
-              id="rate2"
-              hidden="hidden"
-              bind:group={currentRating}
-              value={2}
-            />
-            <label
-              for="rate2"
-              class="rating-radio"
-              class:rating-radio-checked={currentRating == 2}
-            >
-              2
-            </label>
-          </div>
+        <div class="radio inline-block">
+          <input
+            name="currentRating"
+            type="radio"
+            id="rate2"
+            hidden="hidden"
+            bind:group={currentRating}
+            value={2}
+          />
+          <label
+            for="rate2"
+            class="rating-radio"
+            class:rating-radio-checked={currentRating == 2}
+          >
+            2
+          </label>
+        </div>
 
-          <div class="radio inline-block">
-            <input
-              name="currentRating"
-              type="radio"
-              id="rate3"
-              hidden="hidden"
-              bind:group={currentRating}
-              value={3}
-            />
-            <label
-              for="rate3"
-              class="rating-radio"
-              class:rating-radio-checked={currentRating == 3}
-            >
-              3
-            </label>
-          </div>
+        <div class="radio inline-block">
+          <input
+            name="currentRating"
+            type="radio"
+            id="rate3"
+            hidden="hidden"
+            bind:group={currentRating}
+            value={3}
+          />
+          <label
+            for="rate3"
+            class="rating-radio"
+            class:rating-radio-checked={currentRating == 3}
+          >
+            3
+          </label>
+        </div>
 
-          <div class="radio inline-block">
-            <input
-              name="currentRating"
-              type="radio"
-              id="rate4"
-              hidden="hidden"
-              bind:group={currentRating}
-              value={4}
-            />
-            <label
-              for="rate4"
-              class="rating-radio"
-              class:rating-radio-checked={currentRating == 4}
-            >
-              4
-            </label>
-          </div>
+        <div class="radio inline-block">
+          <input
+            name="currentRating"
+            type="radio"
+            id="rate4"
+            hidden="hidden"
+            bind:group={currentRating}
+            value={4}
+          />
+          <label
+            for="rate4"
+            class="rating-radio"
+            class:rating-radio-checked={currentRating == 4}
+          >
+            4
+          </label>
         </div>
       </div>
-    {/if}
+    </div>
   </section>
 
   <section>
-    <span class="w-full text-lg">{$order} of {$total}</span>
+    <p class="w-full text-center text-lg">{$order} of {$total}</p>
   </section>
 
-  <section class="container p-4">
+  <div
+    class="fixed bottom-14 left-1/2 mx-auto inline-flex w-5/6 h-20  -translate-x-1/2 transform items-center justify-between "
+  >
     <button
-      class="hover:bg-blue-dark rounded bg-blue-500 py-2 px-6 font-bold text-white"
-      on:click={$backToParent}
-      >Back
-    </button>
-    <button
-      class="hover:bg-blue-dark rounded bg-blue-500 py-2 px-6 font-bold text-white disabled:cursor-not-allowed disabled:bg-gray-200"
-      disabled={!canSubmit}
-      on:click={rateNow}>Submit</button
+      class="focus:outline-none rounded-full bg-black font-bold text-white"
     >
-  </section>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="h-14 w-14"
+        viewBox="0 0 20 20"
+        fill="currentColor"
+      >
+        <path
+          fill-rule="evenodd"
+          d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z"
+          clip-rule="evenodd"
+        />
+      </svg>
+    </button>
+
+    {#if canSubmit}
+      <button
+        class="focus:outline-none rounded-full bg-white font-bold text-asPrimary"
+        on:click={rateNow}
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-16 w-16"
+          viewBox="0 0 20 20"
+          fill="currentColor"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+            clip-rule="evenodd"
+          />
+        </svg>
+      </button>
+    {:else}
+      <span class="h-16 w-16" />
+    {/if}
+  </div>
 </div>
