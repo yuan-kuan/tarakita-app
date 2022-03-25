@@ -59,6 +59,8 @@ export const OptionStores = {
  * @property {object} goToNext
  * @property {object} backToParent
  * @property {object} submit
+ * @property {object} comment
+ * @property {object} submitComment
  */
 
 /**
@@ -72,6 +74,8 @@ export const AnsweringStores = {
   goToNext: createRef(),
   backToParent: createRef(),
   submit: createRef(),
+  comment: createRef(),
+  submitComment: createRef(),
 };
 
 /**

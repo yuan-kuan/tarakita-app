@@ -161,12 +161,12 @@ const isCommentTheSame = R.curry((next, previous) => {
   return R.and(posSame, negSame);
 });
 
-const putComment = (questionId, submission) =>
+const putComment = R.curry((questionId, submission) =>
   getComment(questionId).chain(
     R.ifElse(isCommentTheSame(submission), R.always(free.of({})), (previous) =>
       free.of(previous).map(R.mergeLeft(submission)).chain(db.put)
     )
-  );
+  ));
 
 export {
   init,

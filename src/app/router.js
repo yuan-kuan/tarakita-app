@@ -6,7 +6,7 @@ import { Path } from 'path-parser';
 import * as free from 'fp/free';
 import { addSop } from 'fp/sop';
 import { goToAskerPage } from 'app/asker';
-import { goToHomePage, goToQuestion } from 'app/home';
+import { goToHomePage, goToQuestion, goToComment } from 'app/home';
 import { goToRegisterPage } from 'app/user';
 
 const Navigation = daggy.taggedSum('Navigation', {
@@ -47,12 +47,15 @@ const homePath = '/';
 const askerPath = '/asker';
 const registerPath = '/register';
 const questionPath = '/q/:id';
+const commentPath = '/q/:id/c';
 
 const setHomeUrl = () => setUrl(homePath);
 const setAskerUrl = () => setUrl(askerPath);
 const setRegisterUrl = () => setUrl(registerPath);
 const setQuestionUrl = (id) =>
   setUrl(questionPath, { id: encodeURIComponent(id) });
+const setCommentUrl = (id) =>
+  setUrl(commentPath, { id: encodeURIComponent(id) });
 //const setItemUrl = (itemId) => setUrl(itemPath, { 'itemId': encodeURIComponent(itemId) });
 
 function start() {
@@ -69,13 +72,12 @@ function start() {
   });
 
   page(questionPath, (ctx) => {
-    console.log(ctx);
     addSop(() => goToQuestion(ctx.params.id));
   });
 
-  //  page(itemPath, (ctx) => {
-  //    addSop(() => goToItem(ctx.params.itemId));
-  //  });
+  page(commentPath, (ctx) => {
+    addSop(() => goToComment(ctx.params.id));
+  });
 
   page('*', () => {
     console.error('Unknown path');
@@ -84,4 +86,4 @@ function start() {
 }
 
 export const navigationInterpretor = [Navigation, nagivationToFuture];
-export { start, setHomeUrl, setAskerUrl, setQuestionUrl, setRegisterUrl };
+export { start, setHomeUrl, setAskerUrl, setQuestionUrl, setRegisterUrl, setCommentUrl };

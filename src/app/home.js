@@ -14,6 +14,7 @@ import { HomeStores, OptionStores, AnsweringStores } from 'app/stores';
 import Home from 'view/Home.svelte';
 import OptionList from 'view/OptionList.svelte';
 import AnsweringPage from 'view/AnsweringPage.svelte';
+import CommentPage from 'view/CommentPage.svelte';
 import { tapLog } from './utils';
 
 const L = {
@@ -28,15 +29,50 @@ const makeGoTos = (docs) =>
     R.map((id) => () => addSop(() => goToQuestion(id)))
   )(docs);
 
-const goToComment = (id) => free.of(id);
+const performCommentSubmission = (topicId, pos, neg) =>
+  free
+    .of(answer.createCommentSubmission(pos, neg))
+    .chain(answer.putComment(topicId))
+    .chain((_) =>
+      free.of(topicId)
+        .map(tapLog('topic'))
+        .chain(tree.getAncestors)
+        .map(R.last)
+        .map(R.view(L.id))
+        .map(tapLog('topic de topic'))
+        .chain(goToQuestion)
+    );
+
+const goToComment = (topicId) =>
+  free
+    .of(topicId)
+    .chain(answer.getComment)
+    .chain((comment) =>
+      free.sequence([
+        viewMainPage(CommentPage),
+        router.setCommentUrl(topicId),
+        setRef(AnsweringStores.comment, comment),
+        setRef(AnsweringStores.submitComment, (pos, neg) =>
+          addSop(() => performCommentSubmission(topicId, pos, neg))
+        ),
+        presentAncestor(topicId),
+      ])
+    );
 
 const goToNextQuestion = (id) =>
   free
     .of(id)
     .chain(tree.getNextSibling)
     .call(
-      free.bichain(goToComment(id), (nextQuestionDoc) =>
-        free.of(nextQuestionDoc).map(R.view(L.id)).chain(goToQuestion)
+      free.bichain(
+        R.always(
+          free.of(id)
+            .chain(tree.getAncestors)
+            .map(R.last)
+            .map(R.view(L.id))
+            .chain(goToComment)),
+        (nextQuestionDoc) =>
+          free.of(nextQuestionDoc).map(R.view(L.id)).chain(goToQuestion)
       )
     );
 
@@ -223,4 +259,4 @@ const goToHomePage = () =>
       )
     );
 
-export { goToHomePage, goToQuestion };
+export { goToHomePage, goToQuestion, goToComment };
