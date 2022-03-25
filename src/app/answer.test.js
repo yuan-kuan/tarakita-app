@@ -253,8 +253,14 @@ test('get uninitialized comment doc will result in empty comment', async () => {
 
 test('putting comment and getting comment', async () => {
   const fm = free.sequence([
-    answer.putComment('q_venue+01-01', 'pos 1', 'neg 1'),
-    answer.putComment('q_venue+01+02-01', '', 'neg 2'),
+    answer.putComment(
+      'q_venue+01-01',
+      answer.createCommentSubmission('pos 1', 'neg 1')
+    ),
+    answer.putComment(
+      'q_venue+01+02-01',
+      answer.createCommentSubmission('', 'neg 2')
+    ),
   ]);
 
   const result = await interpret(fm);
@@ -273,12 +279,30 @@ test('putting comment and getting comment', async () => {
 test('putting empty comment do not save', async () => {
   const fm = free
     .sequence([
-      answer.putComment('q_venue+01-01', '', ''),
-      answer.putComment('q_venue+01+02-01', '', ''),
-      answer.putComment('q_venue+01-01', '', ''),
-      answer.putComment('q_venue+01+02-01', '', ''),
-      answer.putComment('q_venue+01-01', '', ''),
-      answer.putComment('q_venue+01+02-01', '', ''),
+      answer.putComment(
+        'q_venue+01-01',
+        answer.createCommentSubmission('', '')
+      ),
+      answer.putComment(
+        'q_venue+01+02-01',
+        answer.createCommentSubmission('', '')
+      ),
+      answer.putComment(
+        'q_venue+01-01',
+        answer.createCommentSubmission('', '')
+      ),
+      answer.putComment(
+        'q_venue+01+02-01',
+        answer.createCommentSubmission('', '')
+      ),
+      answer.putComment(
+        'q_venue+01-01',
+        answer.createCommentSubmission('', '')
+      ),
+      answer.putComment(
+        'q_venue+01+02-01',
+        answer.createCommentSubmission('', '')
+      ),
       answer.getComment('q_venue+01-01'),
       answer.getComment('q_venue+01+02-01'),
     ])
@@ -300,12 +324,30 @@ test('putting empty comment do not save', async () => {
 test('putting same comment do not save', async () => {
   const fm = free
     .sequence([
-      answer.putComment('q_venue+01-01', 'pos 1', 'neg 1'),
-      answer.putComment('q_venue+01+02-01', '', 'neg 2'),
-      answer.putComment('q_venue+01-01', 'pos 1', 'neg 1'),
-      answer.putComment('q_venue+01+02-01', '', 'neg 2'),
-      answer.putComment('q_venue+01-01', 'pos 1', 'neg 1'),
-      answer.putComment('q_venue+01+02-01', '', 'neg 2'),
+      answer.putComment(
+        'q_venue+01-01',
+        answer.createCommentSubmission('pos 1', 'neg 1')
+      ),
+      answer.putComment(
+        'q_venue+01+02-01',
+        answer.createCommentSubmission('', 'neg 2')
+      ),
+      answer.putComment(
+        'q_venue+01-01',
+        answer.createCommentSubmission('pos 1', 'neg 1')
+      ),
+      answer.putComment(
+        'q_venue+01+02-01',
+        answer.createCommentSubmission('', 'neg 2')
+      ),
+      answer.putComment(
+        'q_venue+01-01',
+        answer.createCommentSubmission('pos 1', 'neg 1')
+      ),
+      answer.putComment(
+        'q_venue+01+02-01',
+        answer.createCommentSubmission('', 'neg 2')
+      ),
       answer.getComment('q_venue+01-01'),
       answer.getComment('q_venue+01+02-01'),
     ])

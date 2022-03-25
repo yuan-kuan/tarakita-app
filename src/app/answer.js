@@ -131,14 +131,15 @@ const finalResult = (venueId) =>
 const getAnswer = (questionId) =>
   free.of(questionId).chain(convertToAnswerId).chain(db.get);
 
+const createCommentSubmission = (pos, neg) =>
+  R.pipe(R.set(L.positive, pos), R.set(L.negative, neg))({});
+
 const generateEmptyComment = (questionId) =>
   free
     .of(questionId)
     .chain(convertToCommentId)
     .map(R.set(L.id))
-    .ap(free.of({}))
-    .map(R.set(L.positive, ''))
-    .map(R.set(L.negative, ''))
+    .ap(free.of(createCommentSubmission('', '')))
     .map(R.set(L.type, 'comment'));
 
 const getComment = (questionId) =>
@@ -148,24 +149,22 @@ const getComment = (questionId) =>
     .chain(db.get)
     .call(free.bichain(R.always(generateEmptyComment(questionId)), free.of));
 
-const isCommentTheSame = R.curry((pos, neg, previous) => {
-  const posSame = R.equals(R.view(L.positive, previous), pos);
-  const negSame = R.equals(R.view(L.negative, previous), neg);
+const isCommentTheSame = R.curry((next, previous) => {
+  const posSame = R.equals(
+    R.view(L.positive, previous),
+    R.view(L.positive, next)
+  );
+  const negSame = R.equals(
+    R.view(L.negative, previous),
+    R.view(L.negative, next)
+  );
   return R.and(posSame, negSame);
 });
 
-const putComment = (questionId, pos, neg) =>
+const putComment = (questionId, submission) =>
   getComment(questionId).chain(
-    R.ifElse(isCommentTheSame(pos, neg), R.always(free.of({})), (previous) =>
-      free
-        .of(previous)
-        .map(
-          R.mergeLeft({
-            positive: pos,
-            negative: neg,
-          })
-        )
-        .chain(db.put)
+    R.ifElse(isCommentTheSame(submission), R.always(free.of({})), (previous) =>
+      free.of(previous).map(R.mergeLeft(submission)).chain(db.put)
     )
   );
 
@@ -176,6 +175,7 @@ export {
   ratio,
   finalResult,
   getAnswer,
+  createCommentSubmission,
   getComment,
   putComment,
 };
