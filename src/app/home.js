@@ -21,6 +21,7 @@ const L = {
   id: R.lensProp('_id'),
   value: R.lensProp('value'),
   rating: R.lensProp('rating'),
+  total: R.lensProp('total')
 };
 
 const makeGoTos = (docs) =>
@@ -92,6 +93,7 @@ const performSubmitAnswer = (questionId, rating) => {
 const presentQuestion = (id) =>
   free.sequence([
     free.of(id).chain(tree.getQuestion).chain(setRef(AnsweringStores.question)),
+    free.of(id).map(tree.orderOf).chain(setRef(AnsweringStores.order)),
     free
       .of(id)
       .chain(answer.getAnswer)
@@ -116,6 +118,14 @@ const presentChildren = (children) =>
     setRef(OptionStores.goToOptions, makeGoTos(children)),
   ]);
 
+const presentTotal = (ancestors) =>
+  free.of(ancestors)
+    .map(R.last)
+    .map(R.view(L.id))
+    .chain(answer.ratio)
+    .map(R.view(L.total))
+    .chain(setRef(AnsweringStores.total));
+
 const presentQuestionAncestor = (id) =>
   free
     .of(id)
@@ -130,6 +140,7 @@ const presentQuestionAncestor = (id) =>
             )
           )
         ),
+        presentTotal(ancestors)
       ])
     );
 

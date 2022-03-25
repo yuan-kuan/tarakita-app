@@ -54,6 +54,8 @@ export const OptionStores = {
  * @typedef {object} AnsweringStores
  * @property {object} ancestors
  * @property {object} question
+ * @property {object} order
+ * @property {object} total
  * @property {object} rating
  * @property {object} hasNext
  * @property {object} goToNext
@@ -69,6 +71,8 @@ export const OptionStores = {
 export const AnsweringStores = {
   ancestors: createRef([]),
   question: createRef(),
+  order: createRef(),
+  total: createRef(),
   rating: createRef(),
   hasNext: createRef(),
   goToNext: createRef(),

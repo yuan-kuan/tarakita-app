@@ -10,13 +10,33 @@
     backToParent,
     submit,
     rating,
+    order,
+    total
   } = AnsweringStores;
+
+  let title, subtitle, topic;
+
+  const unsubAncestors = ancestors.subscribe((values) => {
+    title = undefined;
+    subtitle = undefined;
+    topic = undefined;
+
+    if (values.length >= 1) {
+      title = values[0];
+    }
+    if (values.length >= 2) {
+      subtitle = values[1];
+    }
+    if (values.length >= 3) {
+      topic = values[2];
+    }
+  });
 
   let yesOrNo;
   let currentRating;
   let canSubmit = false;
 
-  const unsub = rating.subscribe((v) => {
+  const unsubRating = rating.subscribe((v) => {
     if (v != undefined) {
       currentRating = v;
       yesOrNo = v == 0 ? false : true;
@@ -40,9 +60,43 @@
     canSubmit = false;
   };
 
-  onDestroy(unsub);
+  onDestroy(() => {
+		unsubAncestors();
+		unsubRating();
+  });
 </script>
 
+<div class="flex min-h-screen flex-col">
+  
+  <header class="flex flex-row bg-primary p-4">
+    <button on:click={$backToParent}>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="h-10 w-10 text-white"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+        stroke-width="2"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M15 19l-7-7 7-7"
+        />
+      </svg>
+    </button>
+
+    {#if subtitle}
+      <div class="flex flex-col h-14">
+        <span class="text-3xl font-bold text-white">{title}</span>
+        <span class="text-xl text-white">{subtitle}</span>
+      </div>
+    {:else}
+      <div class="flex flex-col h-14">
+        <span class="text-white text-3xl font-bold ">{title}</span>
+      </div>
+    {/if}
+  </header>
 <section class="container p-4">
   <h2 class="px-4 py-6 text-lg">{$question}</h2>
 
@@ -165,6 +219,10 @@
   {/if}
 </section>
 
+<section>
+	<span class="w-full text-lg">{$order} of {$total}</span>
+</section>
+
 <section class="container p-4">
   <button
     class="hover:bg-blue-dark rounded bg-blue-500 py-2 px-6 font-bold text-white"
@@ -177,6 +235,7 @@
     on:click={rateNow}>Submit</button
   >
 </section>
+</div>
 
 <style>
   .radio input ~ label {
