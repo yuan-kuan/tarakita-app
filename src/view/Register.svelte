@@ -37,9 +37,12 @@
   };
 </script>
 
-<div class="min-h-screen bg-primary pt-4">
+<div class="flex min-h-screen flex-col bg-primary pt-4">
   <img class="mx-auto h-1/2 w-1/2" src="images/kotakita.png" />
-  <form class="mb-4 px-8 pt-6 pb-8 " on:submit={handleSubmit}>
+  <form
+    class="mb-4 flex flex-grow flex-col px-8 pt-6 pb-8 "
+    on:submit={handleSubmit}
+  >
     <div class="mb-4">
       <label class="mb-2 block text-lg font-bold text-white" for="name">
         Name
@@ -50,25 +53,25 @@
       />
     </div>
 
-    <div class="mb-6">
-      <BigCheck bind:value={oku} title="OKU" main={true} />
+    <div class="flex-grow">
+      <div class="mb-4">
+        <BigCheck bind:value={oku} title="OKU" main={true} />
+      </div>
+
+      {#if oku}
+        <div class="pl-2">
+          <BigCheck bind:value={blind} title="Blind / Low vision" />
+          <BigCheck bind:value={deaf} title="Deaf / Audio Barriers" />
+          <BigCheck
+            bind:value={lowMobile}
+            title="Wheelchair / Scooter User / Low Mobility"
+          />
+          <BigCheck bind:value={others} title="Others" />
+        </div>
+      {/if}
     </div>
 
-    {#if oku}
-      <div class="pl-2">
-        <BigCheck bind:value={blind} title="Blind / Low vision" />
-        <BigCheck bind:value={deaf} title="Deaf / Audio Barriers" />
-        <BigCheck
-          bind:value={lowMobile}
-          title="Wheelchair / Scooter User / Low Mobility"
-        />
-        <BigCheck bind:value={others} title="Others" />
-      </div>
-    {/if}
-
-    <div
-      class="fixed bottom-4 left-1/2 mx-auto inline-flex w-5/6  -translate-x-1/2 transform items-center justify-between "
-    >
+    <div class="flex items-center justify-between ">
       <button
         class="focus:outline-none rounded-full bg-white font-bold text-asPrimary"
       >

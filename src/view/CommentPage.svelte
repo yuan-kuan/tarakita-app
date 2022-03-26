@@ -33,7 +33,7 @@
   onDestroy(unsubAncestors);
 </script>
 
-<div class="flex min-h-screen flex-col">
+<div class="flex flex min-h-screen flex-col">
   <header class="flex flex-row bg-primary p-4">
     <button on:click={$backToParent}>
       <svg
@@ -64,7 +64,7 @@
     {/if}
   </header>
 
-  <section class="container p-4">
+  <section class="container flex-grow p-4">
     <div class="flex h-24 items-end px-4 py-5">
       <span class="text-xl font-semibold">{topic}</span>
     </div>
@@ -96,9 +96,7 @@
     </div>
   </section>
 
-  <div
-    class="fixed bottom-4 left-1/2 mx-auto inline-flex h-20 w-5/6  -translate-x-1/2 transform items-center justify-between "
-  >
+  <div class="flex items-center justify-between px-8 pb-4">
     <button
       class="focus:outline-none rounded-full bg-black font-bold text-white"
     >
