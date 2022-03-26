@@ -3,7 +3,7 @@
 </script>
 
 <div
-  class="fixed top-0 left-0 z-30 flex h-screen w-screen items-center justify-center bg-gray-900 bg-opacity-10"
+  class="fixed top-0 left-0 z-30 flex h-screen w-screen items-center justify-center bg-gray-900 bg-opacity-50"
   on:click
 >
   <div
@@ -14,7 +14,7 @@
   >
     <slot />
   </div>
-  <button class="absolute top-2 right-2" on:click>
+  <button class="absolute top-2 right-2 text-white" on:click>
     <svg
       xmlns="http://www.w3.org/2000/svg"
       class="h-10 w-10"

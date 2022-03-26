@@ -19,6 +19,7 @@ export const AskerStores = {
  * @property {object} venues
  * @property {object} downloadingQuestion
  * @property {object} goToVenues
+ * @property {object} reset
  */
 
 /**
@@ -28,6 +29,7 @@ export const HomeStores = {
   venues: createRef([]),
   downloadingQuestion: createRef(),
   goToVenues: createRef([]),
+  reset: createRef(),
 };
 
 /**

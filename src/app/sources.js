@@ -41,4 +41,6 @@ const uploadQuestion = () =>
 
 const uploadAnswer = () => {};
 
-export { downloadQuestion, uploadQuestion, uploadAnswer };
+const reset = () => db.destroy();
+
+export { downloadQuestion, uploadQuestion, uploadAnswer, reset };

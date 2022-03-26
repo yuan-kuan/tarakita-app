@@ -1,13 +1,33 @@
 <script>
+  import Modal from 'view/Modal.svelte';
+  import DropdownMenu from 'view/DropdownMenu.svelte';
   import { HomeStores } from 'app/stores';
 
-  const { venues, goToVenues, downloadingQuestion } = HomeStores;
+  const { venues, goToVenues, downloadingQuestion, reset } = HomeStores;
+
+  let confirmPopup = false;
+  const displayPopup = () => {
+    confirmPopup = true;
+  };
+
+  const toReset = () => {
+    confirmPopup = false;
+    $reset();
+  };
 </script>
 
 <div class="flex min-h-screen flex-col">
-  <section class="bg-primary p-8">
-    <h1 class="text-3xl text-white">Where are you?</h1>
-  </section>
+  <header class="flex flex-row justify-between bg-primary p-8">
+    <span class="text-3xl text-white">Where are you?</span>
+    <DropdownMenu
+      actions={[
+        {
+          action: displayPopup,
+          label: 'Delete Account',
+        },
+      ]}
+    />
+  </header>
 
   <section class="flex grow flex-col items-center pt-20">
     {#each $venues as venue, index}
@@ -40,3 +60,25 @@
 
   <span />
 </div>
+
+{#if confirmPopup}
+  <Modal on:click={() => (confirmPopup = false)}>
+    <div
+      class="mx-3 flex flex-col items-center justify-center rounded-lg bg-white p-4 shadow-lg"
+    >
+      <p class="p-2">
+        Delete the current account and start again with a new account. This will
+        NOT delete any review you had submitted before.
+      </p>
+
+      <div class="flex w-full flex-row justify-between">
+        <button class="btn bg-red-500 text-white" on:click={toReset}>Yes</button
+        >
+        <button
+          class="btn border-2 border-primary bg-white text-asPrimary"
+          on:click={() => (confirmPopup = false)}>No</button
+        >
+      </div>
+    </div>
+  </Modal>
+{/if}

@@ -67,10 +67,13 @@ const goToRegisterPage = () =>
 
 const getUserId = () => loadPreviousUser().map(R.view(L.id));
 
+const reset = () => kv.remove(C.previousUserKey);
+
 export {
   createAndSave,
   loadPreviousUser,
   hasPreviousUser,
   goToRegisterPage,
   getUserId,
+  reset,
 };

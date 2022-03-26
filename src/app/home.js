@@ -8,14 +8,14 @@ import * as router from 'app/router';
 import * as tree from 'app/tree';
 import * as user from 'app/user';
 import * as answer from 'app/answer';
-import { downloadQuestion } from 'app/sources';
+import { downloadQuestion, reset } from 'app/sources';
 import { HomeStores, OptionStores, AnsweringStores } from 'app/stores';
 
 import Home from 'view/Home.svelte';
 import OptionList from 'view/OptionList.svelte';
 import AnsweringPage from 'view/AnsweringPage.svelte';
 import CommentPage from 'view/CommentPage.svelte';
-import { tapLog } from './utils';
+import { reload, tapLog } from './utils';
 
 const L = {
   id: R.lensProp('_id'),
@@ -256,12 +256,15 @@ const syncLatestQuestion = () =>
     setRef(HomeStores.downloadingQuestion, false),
   ]);
 
+const performReset = () => free.sequence([reset(), user.reset(), reload()]);
+
 const presentHomePage = () =>
   free.sequence([
     viewMainPage(Home),
     router.setHomeUrl(),
     presentVenue(),
     syncLatestQuestion(),
+    setRef(HomeStores.reset, () => addSop(() => performReset())),
   ]);
 
 const goToHomePage = () =>
