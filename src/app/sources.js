@@ -22,7 +22,9 @@ const uploadDesignDoc = () => {
         );
       }.toString(),
       answer: function (doc, req) {
-        return doc.type == 'answer' && doc.user == req.user;
+        return (
+          doc.type == 'answer' || doc.type == 'comment' || doc.type == 'user'
+        );
       }.toString(),
     },
   };
@@ -39,7 +41,11 @@ const uploadQuestion = () =>
     db.replicateTo(dbUrl, { filter: 'replicate/question' }),
   ]);
 
-const uploadAnswer = () => {};
+const uploadAnswer = () =>
+  free.sequence([
+    uploadDesignDoc(),
+    db.replicateTo(dbUrl, { filter: 'replicate/answer' }),
+  ]);
 
 const reset = () => db.destroy();
 

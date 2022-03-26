@@ -49,11 +49,11 @@
     <p>The review is compeleted with a total score of</p>
     <p>{$score}</p>
 
-    <button class="btn">Upload Review</button>
+    <button class="btn" on:click={$upload}>Upload Review</button>
   {:else}
     <p>The review is incomplete</p>
     <p>Progress: {$ratio.answered} / {$ratio.total}</p>
 
-    <button class="btn">Upload INCOMPLETE Review</button>
+    <button class="btn" on:click={$upload}>Upload INCOMPLETE Review</button>
   {/if}
 </div>

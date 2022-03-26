@@ -146,7 +146,8 @@ const generateEmptyComment = (questionId) =>
     .chain(convertToCommentId)
     .map(R.set(L.id))
     .ap(free.of(createCommentSubmission('', '')))
-    .map(R.set(L.type, 'comment'));
+    .map(R.set(L.type, 'comment'))
+    .map((doc) => R.set(L.user, userIdFromId(R.view(L.id, doc)), doc));
 
 const getComment = (questionId) =>
   free

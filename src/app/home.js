@@ -8,7 +8,7 @@ import * as router from 'app/router';
 import * as tree from 'app/tree';
 import * as user from 'app/user';
 import * as answer from 'app/answer';
-import { downloadQuestion, reset } from 'app/sources';
+import { downloadQuestion, reset, uploadAnswer } from 'app/sources';
 import {
   HomeStores,
   OptionStores,
@@ -292,12 +292,18 @@ const goToHomePage = () =>
       )
     );
 
+const performUploadAnswer = (venueId) =>
+  free.sequence([uploadAnswer(), goToHomePage()]);
+
 const goToResult = (venueId) =>
   free.sequence([
     viewMainPage(Result),
     router.setResultUrl(venueId),
     answer.ratio(venueId).chain(setRef(ResultStores.ratio)),
     setRef(ResultStores.score, 0),
+    setRef(ResultStores.upload, () =>
+      addSop(() => performUploadAnswer(venueId))
+    ),
   ]);
 
 export { goToHomePage, goToQuestion, goToComment, goToResult };
