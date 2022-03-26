@@ -96,8 +96,9 @@
       </div>
     {/if}
   </header>
+
   <section class="container p-4">
-    <div class="h-24 px-4 py-5 flex items-end">
+    <div class="flex h-24 items-end px-4 py-5">
       <span class="text-xl font-semibold">{topic}</span>
     </div>
 
@@ -231,7 +232,7 @@
   </section>
 
   <div
-    class="fixed bottom-14 left-1/2 mx-auto inline-flex w-5/6 h-20  -translate-x-1/2 transform items-center justify-between "
+    class="fixed bottom-14 left-1/2 mx-auto inline-flex h-20 w-5/6  -translate-x-1/2 transform items-center justify-between "
   >
     <button
       class="focus:outline-none rounded-full bg-black font-bold text-white"
