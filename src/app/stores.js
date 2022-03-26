@@ -106,6 +106,7 @@ export const UserStores = {
  * @typedef {object} ResultStores
  * @property {object} ratio
  * @property {object} upload
+ * @property {object} silentUpload
  * @property {object} score
  */
 
@@ -115,5 +116,6 @@ export const UserStores = {
 export const ResultStores = {
   ratio: createRef({ answered: 2, total: 5 }),
   upload: createRef(),
+  silentUpload: createRef(),
   score: createRef(),
 };

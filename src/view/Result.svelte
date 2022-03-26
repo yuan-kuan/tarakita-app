@@ -1,10 +1,37 @@
 <script>
+  import { beforeUpdate, onDestroy } from 'svelte';
   import { OptionStores, ResultStores } from 'app/stores';
 
   const { backToParent, currentName } = OptionStores;
-  const { ratio, upload, score } = ResultStores;
+  const { ratio, upload, silentUpload, score } = ResultStores;
 
   $: completed = $ratio.answered == $ratio.total;
+
+  let timeoutId;
+  let uploaded = false;
+  const silentUploadRun = () => {
+    $silentUpload();
+    uploaded = true;
+  };
+
+  const manualUplad = () => {
+    if (uploaded) {
+      backToParent();
+    } else {
+      clearTimeout(timeoutId);
+      $upload();
+    }
+  };
+
+  beforeUpdate(() => {
+    if (completed && timeoutId == undefined) {
+      timeoutId = setTimeout(silentUploadRun, 3000);
+    }
+  });
+
+  onDestroy(() => {
+    clearTimeout(timeoutId);
+  });
 </script>
 
 <div class="flex min-h-screen flex-col">
@@ -40,7 +67,7 @@
       </p>
       <p class="p-4 text-center text-3xl font-bold text-asPrimary">{$score}</p>
 
-      <button class="topic-btn my-4" on:click={$upload}>Upload Review</button>
+      <button class="topic-btn my-4" on:click={$upload}>Submit Review</button>
     {:else}
       <p class="text-lg text-center p-4">The review is incomplete</p>
       <p class="text-xl text-asPrimary text-center font-bold p-4">
@@ -48,7 +75,7 @@
       </p>
 
       <button class="topic-btn-done my-4" on:click={$upload}
-        >Upload INCOMPLETE Review</button
+        >Submit INCOMPLETE Review</button
       >
     {/if}
   </section>

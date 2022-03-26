@@ -321,6 +321,7 @@ const goToResult = (venueId) =>
     setRef(ResultStores.upload, () =>
       addSop(() => performUploadAnswer(venueId))
     ),
+    setRef(ResultStores.silentUpload, () => addSop(() => uploadAnswer())),
   ]);
 
 export { goToHomePage, goToQuestion, goToComment, goToResult };
