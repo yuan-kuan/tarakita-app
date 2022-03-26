@@ -1,5 +1,5 @@
 {
-  "name": "Tara Kita Access Audit",
+  "name": "tara-kita-access-review",
   "version": "0.1.0",
   "scripts": {
     "build": "rollup -c",
