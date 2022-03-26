@@ -22,7 +22,6 @@
     }
   });
 
-
   let positive = '';
   let negative = '';
 
@@ -63,43 +62,43 @@
       </div>
     {/if}
   </header>
-  
-<section class="container p-4">
-  <div class="flex h-24 items-end px-4 py-5">
-    <span class="text-xl font-semibold">{topic}</span>
-  </div>
 
-  <h2 class="h-28 px-4 pb-4 text-lg">Comments:</h2>
-
-  <div>
-    <h3>Positive</h3>
-
-    <div class="mx-auto w-full max-w-sm">
-      <textarea
-        class="focus:outline-none h-24 w-full resize-none overflow-hidden rounded-xl border p-2 text-black ring-1 ring-transparent transition duration-300 ease-in-out focus:border-blue-500 focus:ring-blue-500"
-        placeholder="What are the good thing . . ."
-        bind:value={positive}
-      />
+  <section class="container p-4">
+    <div class="flex h-24 items-end px-4 py-5">
+      <span class="text-xl font-semibold">{topic}</span>
     </div>
 
+    <h2 class="h-28 px-4 pb-4 text-lg">Comments:</h2>
+
     <div>
-      <h3>Negative:</h3>
+      <h3>Positive</h3>
 
       <div class="mx-auto w-full max-w-sm">
         <textarea
           class="focus:outline-none h-24 w-full resize-none overflow-hidden rounded-xl border p-2 text-black ring-1 ring-transparent transition duration-300 ease-in-out focus:border-blue-500 focus:ring-blue-500"
-          placeholder="What needs improvement. . ."
-          bind:value={negative}
+          placeholder="What are the good thing . . ."
+          bind:value={positive}
         />
+      </div>
 
-        <div class="flex justify-end">
-          <button
-            class="rounded-full bg-black py-1 px-2 text-white"
-            on:click={submit}>Comment</button
-          >
+      <div>
+        <h3>Negative:</h3>
+
+        <div class="mx-auto w-full max-w-sm">
+          <textarea
+            class="focus:outline-none h-24 w-full resize-none overflow-hidden rounded-xl border p-2 text-black ring-1 ring-transparent transition duration-300 ease-in-out focus:border-blue-500 focus:ring-blue-500"
+            placeholder="What needs improvement. . ."
+            bind:value={negative}
+          />
+
+          <div class="flex justify-end">
+            <button
+              class="rounded-full bg-black py-1 px-2 text-white"
+              on:click={submit}>Comment</button
+            >
+          </div>
         </div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 </div>

@@ -24,6 +24,6 @@
   }
 
   .min-h-28 {
-		min-height: 7rem;
+    min-height: 7rem;
   }
 </style>
