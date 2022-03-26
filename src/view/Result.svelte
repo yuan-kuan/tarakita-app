@@ -1,22 +1,10 @@
 <script>
-  import { onDestroy } from 'svelte';
   import { OptionStores, ResultStores } from 'app/stores';
 
-  const { ancestors, backToParent } = OptionStores;
+  const { backToParent, currentName } = OptionStores;
   const { ratio, upload, score } = ResultStores;
 
-  let title;
-
-  const unsub = ancestors.subscribe((values) => {
-    title = undefined;
-    if (values.length >= 1) {
-      title = values[0];
-    }
-  });
-
-  let completed = $ratio.answered == $ratio.total;
-
-  onDestroy(unsub);
+  $: completed = $ratio.answered == $ratio.total;
 </script>
 
 <div class="flex min-h-screen flex-col">
@@ -38,22 +26,30 @@
       </svg>
     </button>
 
-    {#if title}
+    {#if $currentName}
       <div class="flex h-14 flex-col">
-        <span class="text-3xl font-bold text-white ">{title}</span>
+        <span class="text-3xl font-bold text-white ">{$currentName}</span>
       </div>
     {/if}
   </section>
 
-  {#if completed}
-    <p>The review is compeleted with a total score of</p>
-    <p>{$score}</p>
+  <section class="flex flex-col items-center px-4">
+    {#if completed}
+      <p class="p-4 text-center text-lg">
+        The review is compeleted with a total score of
+      </p>
+      <p class="p-4 text-center text-3xl font-bold text-asPrimary">{$score}</p>
 
-    <button class="btn" on:click={$upload}>Upload Review</button>
-  {:else}
-    <p>The review is incomplete</p>
-    <p>Progress: {$ratio.answered} / {$ratio.total}</p>
+      <button class="topic-btn my-4" on:click={$upload}>Upload Review</button>
+    {:else}
+      <p class="text-lg text-center p-4">The review is incomplete</p>
+      <p class="text-xl text-asPrimary text-center font-bold p-4">
+        Progress: {$ratio.answered} / {$ratio.total}
+      </p>
 
-    <button class="btn" on:click={$upload}>Upload INCOMPLETE Review</button>
-  {/if}
+      <button class="topic-btn my-4" on:click={$upload}
+        >Upload INCOMPLETE Review</button
+      >
+    {/if}
+  </section>
 </div>

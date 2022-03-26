@@ -299,6 +299,8 @@ const goToResult = (venueId) =>
   free.sequence([
     viewMainPage(Result),
     router.setResultUrl(venueId),
+    presentAncestor(venueId),
+    presentCurrent(venueId),
     answer.ratio(venueId).chain(setRef(ResultStores.ratio)),
     setRef(ResultStores.score, 0),
     setRef(ResultStores.upload, () =>
