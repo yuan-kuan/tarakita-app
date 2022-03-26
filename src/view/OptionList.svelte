@@ -1,4 +1,5 @@
 <script>
+  import * as R from 'ramda';
   import { onDestroy } from 'svelte';
   import { OptionStores, ResultStores } from 'app/stores';
 
@@ -39,6 +40,8 @@
       isVenue = false;
     }
   });
+
+  $: allCompleted = R.all(R.equals(true), $isCompleted);
 
   onDestroy(unsub);
 </script>
@@ -104,7 +107,15 @@
     {/each}
 
     {#if isVenue}
-      <button class="topic-btn my-2" on:click={$goToResult}>View Result</button>
+      {#if allCompleted}
+        <button class="topic-btn my-2" on:click={$goToResult}
+          >View Result</button
+        >
+      {:else}
+        <button class="topic-btn-done my-2" on:click={$goToResult}
+          >View Progress</button
+        >
+      {/if}
     {/if}
   </section>
 </div>
