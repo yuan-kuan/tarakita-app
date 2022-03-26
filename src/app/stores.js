@@ -36,6 +36,7 @@ export const HomeStores = {
  * @typedef {object} OptionStores
  * @property {object} ancestors
  * @property {object} options
+ * @property {object} isCompleted
  * @property {object} currentName
  * @property {object} goToOptions
  * @property {object} backToParent
@@ -48,6 +49,7 @@ export const HomeStores = {
 export const OptionStores = {
   ancestors: createRef([]),
   options: createRef([]),
+  isCompleted: createRef([]),
   currentName: createRef(),
   goToOptions: createRef([]),
   backToParent: createRef(),

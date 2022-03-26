@@ -5,6 +5,7 @@
   const {
     ancestors,
     options,
+    isCompleted,
     goToOptions,
     backToParent,
     currentName,
@@ -78,9 +79,28 @@
   {/if}
   <section class="flex grow flex-col items-center pt-20">
     {#each $options as option, index}
-      <button class="topic-btn my-2" on:click={$goToOptions[index]}
-        >{option}</button
-      >
+      {#if $isCompleted[index]}
+        <button class="topic-btn-done my-2" on:click={$goToOptions[index]}>
+          <div class="flex flex-row justify-center">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-6 w-6"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                clip-rule="evenodd"
+              />
+            </svg> <span>{option}</span>
+          </div>
+        </button>
+      {:else}
+        <button class="topic-btn my-2" on:click={$goToOptions[index]}
+          >{option}</button
+        >
+      {/if}
     {/each}
 
     {#if isVenue}

@@ -123,6 +123,12 @@ const presentChildren = (children) =>
   free.sequence([
     setRef(OptionStores.options, R.map(R.view(L.value), children)),
     setRef(OptionStores.goToOptions, makeGoTos(children)),
+    free
+      .of(children)
+      .map(R.map(R.view(L.id)))
+      .map(R.map(answer.isCompleted))
+      .chain(free.sequence)
+      .chain(setRef(OptionStores.isCompleted)),
   ]);
 
 const presentTotal = (ancestors) =>

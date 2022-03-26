@@ -127,6 +127,11 @@ const ratio = (parentId) =>
       generateRatioDoc(R.length(findAnswered(docs)), R.length(docs))
     );
 
+const isCompleted = (parentId) =>
+  ratio(parentId).map((ratioDoc) =>
+    R.equals(R.view(L.answered, ratioDoc), R.view(L.total, ratioDoc))
+  );
+
 const finalResult = (venueId) =>
   free
     .of(venueId)
@@ -181,6 +186,7 @@ export {
   createSubmission,
   submit,
   ratio,
+  isCompleted,
   finalResult,
   getAnswer,
   createCommentSubmission,
