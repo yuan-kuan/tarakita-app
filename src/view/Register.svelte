@@ -71,7 +71,7 @@
       {/if}
     </div>
 
-    <div class="flex items-center justify-between ">
+    <div class="flex items-center justify-between pb-4 ">
       <button
         class="focus:outline-none rounded-full bg-white font-bold text-asPrimary"
       >

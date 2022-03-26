@@ -64,7 +64,7 @@
     {/if}
   </header>
 
-  <section class="container flex-grow p-4">
+  <section class="container p-4">
     <div class="flex h-24 items-end px-4 py-5">
       <span class="text-xl font-semibold">{topic}</span>
     </div>
@@ -96,7 +96,7 @@
     </div>
   </section>
 
-  <div class="flex items-center justify-between px-8 pb-4">
+  <div class="flex items-center justify-between px-8 py-4">
     <button
       class="focus:outline-none rounded-full bg-black font-bold text-white"
     >

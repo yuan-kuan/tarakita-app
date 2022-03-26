@@ -80,7 +80,7 @@
   {#if topic}
     <h3>{topic}</h3>
   {/if}
-  <section class="flex grow flex-col items-center pt-20">
+  <section class="flex grow flex-col items-center pt-16 pb-8">
     {#each $options as option, index}
       {#if $isCompleted[index]}
         <button class="topic-btn-done my-2" on:click={$goToOptions[index]}>

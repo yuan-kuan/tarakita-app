@@ -18,7 +18,7 @@
 
 <div class="flex min-h-screen flex-col">
   <header class="flex flex-row justify-between bg-primary p-8">
-    <span class="text-3xl text-white">Where are you?</span>
+    <span class="text-3xl font-bold text-white">Where are you?</span>
     <DropdownMenu
       actions={[
         {
