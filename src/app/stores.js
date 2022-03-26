@@ -39,6 +39,7 @@ export const HomeStores = {
  * @property {object} currentName
  * @property {object} goToOptions
  * @property {object} backToParent
+ * @property {object} goToResult
  */
 
 /**
@@ -50,6 +51,7 @@ export const OptionStores = {
   currentName: createRef(),
   goToOptions: createRef([]),
   backToParent: createRef(),
+  goToResult: createRef(),
 };
 
 /**
@@ -96,4 +98,20 @@ export const AnsweringStores = {
 export const UserStores = {
   userName: createRef(),
   performRegister: createRef(),
+};
+
+/**
+ * @typedef {object} ResultStores
+ * @property {object} ratio
+ * @property {object} upload
+ * @property {object} score
+ */
+
+/**
+ * @type ResultStores
+ */
+export const ResultStores = {
+  ratio: createRef({ answered: 2, total: 5 }),
+  upload: createRef(),
+  score: createRef(),
 };

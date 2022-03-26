@@ -31,7 +31,9 @@
 
   <section class="flex grow flex-col items-center pt-20">
     {#each $venues as venue, index}
-      <button class="topic-btn" on:click={$goToVenues[index]}>{venue}</button>
+      <button class="topic-btn my-2" on:click={$goToVenues[index]}
+        >{venue}</button
+      >
     {/each}
 
     {#if $downloadingQuestion}

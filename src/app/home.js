@@ -1,6 +1,6 @@
 import * as R from 'ramda';
 import * as free from 'fp/free';
-import { setRef } from 'fp/ref';
+import { setRef, resetRef } from 'fp/ref';
 import { addSop } from 'fp/sop';
 import { viewMainPage } from 'view/view';
 
@@ -9,12 +9,18 @@ import * as tree from 'app/tree';
 import * as user from 'app/user';
 import * as answer from 'app/answer';
 import { downloadQuestion, reset } from 'app/sources';
-import { HomeStores, OptionStores, AnsweringStores } from 'app/stores';
+import {
+  HomeStores,
+  OptionStores,
+  AnsweringStores,
+  ResultStores,
+} from 'app/stores';
 
 import Home from 'view/Home.svelte';
 import OptionList from 'view/OptionList.svelte';
 import AnsweringPage from 'view/AnsweringPage.svelte';
 import CommentPage from 'view/CommentPage.svelte';
+import Result from 'view/Result.svelte';
 import { reload, tapLog } from './utils';
 
 const L = {
@@ -201,6 +207,13 @@ const presentAncestor = (id) =>
 const presentCurrent = (id) =>
   free.of(id).chain(tree.getQuestion).chain(setRef(OptionStores.currentName));
 
+const goToVenue = (id) =>
+  free.sequence([
+    goToListing(id),
+    answer.ratio(id).chain(setRef(ResultStores.ratio)),
+    setRef(OptionStores.goToResult, () => addSop(() => goToResult(id))),
+  ]);
+
 const goToListing = (id) =>
   free
     .of(id)
@@ -212,6 +225,7 @@ const goToListing = (id) =>
         presentChildren(children),
         presentCurrent(id),
         presentAncestor(id),
+        resetRef(ResultStores.ratio),
       ])
     );
 
@@ -225,7 +239,7 @@ const goToQuestion = (id) =>
         [R.equals('subtopic'), R.always(goToFirstQuestion(id))],
         [R.equals('topic'), R.always(goToTopic(id))],
         [R.equals('area'), R.always(goToListing(id))],
-        [R.equals('venue'), R.always(goToListing(id))],
+        [R.equals('venue'), R.always(goToVenue(id))],
       ])
     );
 
@@ -278,4 +292,12 @@ const goToHomePage = () =>
       )
     );
 
-export { goToHomePage, goToQuestion, goToComment };
+const goToResult = (venueId) =>
+  free.sequence([
+    viewMainPage(Result),
+    router.setResultUrl(venueId),
+    answer.ratio(venueId).chain(setRef(ResultStores.ratio)),
+    setRef(ResultStores.score, 0),
+  ]);
+
+export { goToHomePage, goToQuestion, goToComment, goToResult };

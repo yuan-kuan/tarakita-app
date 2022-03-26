@@ -1,11 +1,19 @@
 <script>
   import { onDestroy } from 'svelte';
-  import { OptionStores } from 'app/stores';
+  import { OptionStores, ResultStores } from 'app/stores';
 
-  const { ancestors, options, goToOptions, backToParent, currentName } =
-    OptionStores;
+  const {
+    ancestors,
+    options,
+    goToOptions,
+    backToParent,
+    currentName,
+    goToResult,
+  } = OptionStores;
+  const { ratio } = ResultStores;
 
   let title, subtitle, topic;
+  let isVenue = false;
 
   const unsub = ancestors.subscribe((values) => {
     title = undefined;
@@ -22,6 +30,12 @@
     }
     if (values.length >= 3) {
       topic = values[2];
+    }
+
+    if (values.length == 1) {
+      isVenue = true;
+    } else {
+      isVenue = false;
     }
   });
 
@@ -68,5 +82,9 @@
         >{option}</button
       >
     {/each}
+
+    {#if isVenue}
+      <button class="topic-btn my-2" on:click={$goToResult}>View Result</button>
+    {/if}
   </section>
 </div>
