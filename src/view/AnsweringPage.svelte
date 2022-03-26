@@ -155,7 +155,7 @@
       </div>
     </div>
 
-    <div class="px-4 py-3" class:opacity-0={yesOrNo != true}>
+    <div class="px-10 py-3" class:opacity-0={yesOrNo != true}>
       <label
         for="entry"
         class="mb-2 block text-lg font-semibold text-asPrimary "
