@@ -47,7 +47,7 @@
         Progress: {$ratio.answered} / {$ratio.total}
       </p>
 
-      <button class="topic-btn my-4" on:click={$upload}
+      <button class="topic-btn-done my-4" on:click={$upload}
         >Upload INCOMPLETE Review</button
       >
     {/if}

@@ -43,12 +43,21 @@ const performCommentSubmission = (topicId, pos, neg) =>
     .chain((_) =>
       free
         .of(topicId)
-        .map(tapLog('topic'))
         .chain(tree.getAncestors)
-        .map(R.last)
-        .map(R.view(L.id))
-        .map(tapLog('topic de topic'))
-        .chain(goToQuestion)
+        .chain((ancestors) =>
+          free
+            .of(ancestors)
+            .map(R.head)
+            .map(R.view(L.id))
+            .chain(answer.isCompleted)
+            .chain(
+              R.ifElse(
+                R.equals(true),
+                (_) => goToResult(R.compose(R.view(L.id), R.head)(ancestors)),
+                (_) => goToQuestion(R.compose(R.view(L.id), R.last)(ancestors))
+              )
+            )
+        )
     );
 
 const goToComment = (topicId) =>

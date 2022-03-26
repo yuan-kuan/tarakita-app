@@ -69,7 +69,7 @@
       <span class="text-xl font-semibold">{topic}</span>
     </div>
 
-    <h2 class="px-4 pb-2 text-lg">Comments:</h2>
+    <h2 class="px-4 pb-2 text-lg">Comments (Optional):</h2>
 
     <div class="px-4">
       <h3 class="text-lg text-asPrimary">Positive</h3>
