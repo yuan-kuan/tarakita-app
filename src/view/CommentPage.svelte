@@ -3,7 +3,7 @@
   import { AnsweringStores, OptionStores } from 'app/stores';
 
   const { comment, submitComment } = AnsweringStores;
-  const { ancestors, backToParent } = OptionStores:
+  const { ancestors, backToParent } = OptionStores;
 
   let title, subtitle, topic;
   const unsubAncestors = ancestors.subscribe((values) => {

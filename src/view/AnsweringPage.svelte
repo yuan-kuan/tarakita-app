@@ -102,7 +102,7 @@
       <span class="text-xl font-semibold">{topic}</span>
     </div>
 
-    <h2 class="h-28 px-4 pb-4 text-lg">{$order}. {$question}</h2>
+    <h2 class="min-h-28 px-4 pb-4 text-lg">{$order}. {$question}</h2>
 
     <div class="flex w-full">
       <div class="flex w-full justify-around">

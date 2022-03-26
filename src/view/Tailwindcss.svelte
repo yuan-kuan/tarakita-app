@@ -22,4 +22,8 @@
   .rating-radio-checked {
     @apply bg-primary text-white;
   }
+
+  .min-h-28 {
+		min-height: 7rem;
+  }
 </style>
