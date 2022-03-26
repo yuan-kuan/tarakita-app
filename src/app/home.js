@@ -302,7 +302,7 @@ const goToResult = (venueId) =>
     presentAncestor(venueId),
     presentCurrent(venueId),
     answer.ratio(venueId).chain(setRef(ResultStores.ratio)),
-    setRef(ResultStores.score, 0),
+    answer.finalResult(venueId).chain(setRef(ResultStores.score)),
     setRef(ResultStores.upload, () =>
       addSop(() => performUploadAnswer(venueId))
     ),
