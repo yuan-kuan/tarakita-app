@@ -97,7 +97,7 @@
   </section>
 
   <div
-    class="fixed bottom-14 left-1/2 mx-auto inline-flex h-20 w-5/6  -translate-x-1/2 transform items-center justify-between "
+    class="fixed bottom-4 left-1/2 mx-auto inline-flex h-20 w-5/6  -translate-x-1/2 transform items-center justify-between "
   >
     <button
       class="focus:outline-none rounded-full bg-black font-bold text-white"

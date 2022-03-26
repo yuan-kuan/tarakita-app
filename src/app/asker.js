@@ -45,12 +45,7 @@ const L = {
   filename: R.lensProp('name'),
 };
 
-const basename = R.pipe(
-  R.view(L.filename),
-  R.replace(/[ ]/g, ''),
-  R.split('.'),
-  R.head
-);
+const basename = R.pipe(R.view(L.filename), R.split('.'), R.head);
 
 const performParseCSV = (file) =>
   free

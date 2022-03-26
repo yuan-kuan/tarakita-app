@@ -14,12 +14,13 @@
     total,
   } = AnsweringStores;
 
-  let title, subtitle, topic;
+  let title, subtitle, topic, subtopic;
 
   const unsubAncestors = ancestors.subscribe((values) => {
     title = undefined;
     subtitle = undefined;
     topic = undefined;
+    subtopic = undefined;
 
     if (values.length >= 1) {
       title = values[0];
@@ -29,6 +30,10 @@
     }
     if (values.length >= 3) {
       topic = values[2];
+    }
+    if (values.length >= 4) {
+      topic = values[3];
+      subtopic = values[2];
     }
   });
 
@@ -98,13 +103,19 @@
   </header>
 
   <section class="container p-4">
-    <div class="flex h-24 items-end px-4 py-5">
-      <span class="text-xl font-semibold">{topic}</span>
-    </div>
+    {#if subtopic}
+      <div class="flex h-14 items-end px-4 py-5">
+        <span class="text-xl font-semibold">{subtopic}: {topic}</span>
+      </div>
+    {:else}
+      <div class="flex h-14 items-end px-4 py-5">
+        <span class="text-xl font-semibold">{topic}</span>
+      </div>
+    {/if}
 
-    <h2 class="min-h-28 px-4 pb-4 text-lg">{$order}. {$question}</h2>
+    <h2 class="min-h-5r px-4 pb-4 text-lg">{$order}. {$question}</h2>
 
-    <div class="flex w-full">
+    <div class="flex w-full px-8">
       <div class="flex w-full justify-around">
         <div class="radio inline-block">
           <input
@@ -144,7 +155,7 @@
       </div>
     </div>
 
-    <div class="px-4 py-6" class:opacity-0={yesOrNo != true}>
+    <div class="px-4 py-3" class:opacity-0={yesOrNo != true}>
       <label
         for="entry"
         class="mb-2 block text-lg font-semibold text-asPrimary "
@@ -232,7 +243,7 @@
   </section>
 
   <div
-    class="fixed bottom-14 left-1/2 mx-auto inline-flex h-20 w-5/6  -translate-x-1/2 transform items-center justify-between "
+    class="fixed bottom-4 left-1/2 mx-auto inline-flex h-20 w-5/6  -translate-x-1/2 transform items-center justify-between "
   >
     <button
       class="focus:outline-none rounded-full bg-black font-bold text-white"
