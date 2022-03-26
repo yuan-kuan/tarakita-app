@@ -57,6 +57,7 @@ const goToComment = (topicId) =>
         setRef(AnsweringStores.submitComment, (pos, neg) =>
           addSop(() => performCommentSubmission(topicId, pos, neg))
         ),
+        presentCurrent(topicId),
         presentAncestor(topicId),
       ])
     );
